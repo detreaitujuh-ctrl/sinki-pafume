@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Forward, Check, ExternalLink, Menu, ArrowRight } from 'lucide-react';
 import { DEFAULT_CHIBI } from '../utils/assetStorage';
+import { getPublicShareUrl } from '../utils/shareUtils';
 
 interface HomeScreenProps {
   onShowToast: (message: string) => void;
@@ -24,10 +25,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleShare = async () => {
+    const publicUrl = getPublicShareUrl();
     const shareData = {
       title: 'SINKI Parfums - Define your presence',
       text: 'SINKI Parfums: Aroma yang di tinggal lebih lama dari pada kesan pertama.',
-      url: window.location.href,
+      url: publicUrl,
     };
 
     if (navigator.share) {
@@ -45,7 +47,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
+    const publicUrl = getPublicShareUrl();
+    navigator.clipboard.writeText(publicUrl);
     setCopied(true);
     onShowToast('Tautan SINKI berhasil disalin!');
     setTimeout(() => setCopied(false), 2200);
@@ -165,7 +168,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <img
               src={customChibi || DEFAULT_CHIBI}
               alt="Karakter Chibi SINKI Parfums"
-              className="w-full h-full object-cover object-center filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+              className="w-full h-full object-cover object-center filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] transition-opacity duration-300"
             />
           </div>
         </div>
@@ -259,15 +265,35 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         </div>
 
-        {/* Minimalist Swipe to Collection Indicator */}
+        {/* Luxury Micro-Badge Marquee Box (Replaces Swipe to Collection) */}
         <button
           onClick={onNavigateToCollection}
-          className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-[#1e2235]/90 to-[#141626]/90 hover:from-[#24283f] hover:to-[#171a2c] border border-amber-500/30 flex items-center justify-between text-slate-100 hover:text-amber-200 transition-colors group shadow-sm backdrop-blur-md"
+          aria-label="Lihat Koleksi Parfum SINKI"
+          className="luxury-ticker-container w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-[#171927]/95 via-[#1d2238]/95 to-[#131625]/95 hover:from-[#21263d] hover:to-[#181c2f] border border-amber-500/30 hover:border-amber-400/50 flex items-center gap-2 text-slate-100 transition-all active:scale-[0.98] shadow-[0_4px_16px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.08)] backdrop-blur-md group overflow-hidden"
         >
-          <span className="text-[10px] tracking-wide font-bold">
-            Geser ke kanan untuk melihat Koleksi
-          </span>
-          <ArrowRight size={13} className="text-amber-400 group-hover:translate-x-1 transition-transform" />
+          {/* Running Text Area with Mask Fade */}
+          <div className="flex-1 overflow-hidden relative ticker-mask-fade py-0.5 min-w-0">
+            <div className="luxury-ticker-track font-normal text-[9.5px] tracking-wide text-slate-300">
+              <span className="inline-block pr-6 text-slate-200">
+                ✦ Tahan 8 jam, dia aja yang gak tahan 😏
+              </span>
+              <span className="inline-block pr-6 text-amber-300/90 font-medium">
+                ✦ Tahan 8 jam, dia aja yang gak tahan 😏
+              </span>
+              <span className="inline-block pr-6 text-slate-200">
+                ✦ Tahan 8 jam, dia aja yang gak tahan 😏
+              </span>
+              <span className="inline-block pr-6 text-amber-300/90 font-medium">
+                ✦ Tahan 8 jam, dia aja yang gak tahan 😏
+              </span>
+            </div>
+          </div>
+
+          {/* Action indicator button/arrow */}
+          <div className="shrink-0 flex items-center gap-1 text-[8.5px] font-medium tracking-wider text-amber-400/90 group-hover:text-amber-300 pl-2 border-l border-white/10">
+            <span className="hidden xs:inline">Koleksi</span>
+            <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform text-amber-400" />
+          </div>
         </button>
       </section>
     </div>

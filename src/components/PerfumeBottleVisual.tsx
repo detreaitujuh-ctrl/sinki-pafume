@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sparkles } from 'lucide-react';
 import { Top11Item } from '../data/top11';
+
+// Global in-memory cache to track loaded image URLs across the entire application
+export const loadedPhotoSet = new Set<string>();
 
 interface PerfumeBottleVisualProps {
   item: Top11Item;
@@ -14,47 +17,10 @@ export const PerfumeBottleVisual: React.FC<PerfumeBottleVisualProps> = ({
   customPhoto,
   fitMode = 'cover',
 }) => {
-  const imgRef = useRef<HTMLImageElement>(null);
-  const isDataUrl = Boolean(customPhoto && typeof customPhoto === 'string' && customPhoto.startsWith('data:'));
-  const [imageLoaded, setImageLoaded] = useState(() => isDataUrl);
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     setImageError(false);
-
-    if (!customPhoto) {
-      setImageLoaded(false);
-      return;
-    }
-
-    // Jika berupa Base64 (hasil upload galeri langsung), langsung siap tanpa delay
-    if (customPhoto.startsWith('data:')) {
-      setImageLoaded(true);
-      return;
-    }
-
-    // Cek apakah elemen img sudah selesai dimuat oleh browser
-    if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
-      setImageLoaded(true);
-      return;
-    }
-
-    // Probe gambar dari memori/cache browser
-    const probe = new Image();
-    probe.onload = () => setImageLoaded(true);
-    probe.onerror = () => setImageError(true);
-    probe.src = customPhoto;
-    if (probe.complete && probe.naturalWidth > 0) {
-      setImageLoaded(true);
-      return;
-    }
-
-    // Pengaman Timeout: Maksimal 600ms, jangan pernah macet selamanya di 'MEMUAT...'
-    const timer = setTimeout(() => {
-      setImageLoaded(true);
-    }, 600);
-
-    return () => clearTimeout(timer);
   }, [customPhoto]);
 
   const showCustom = Boolean(customPhoto) && !imageError;
@@ -67,38 +33,26 @@ export const PerfumeBottleVisual: React.FC<PerfumeBottleVisualProps> = ({
       <div className="absolute bottom-1 w-36 h-7 rounded-[100%] bg-amber-400/30 blur-[10px] pointer-events-none" />
 
       {showCustom ? (
-        // Custom Uploaded Bottle Photo with Instant Eager Cache & Glassmorphism Showcase Box
+        // Custom Uploaded Bottle Photo with Instant Eager Render & Glassmorphism Showcase Box
         <div
-          className={`relative w-full h-full rounded-2xl overflow-hidden bg-gradient-to-b from-[#1c1f32]/85 to-[#131522]/95 border border-amber-500/40 shadow-[0_10px_28px_rgba(0,0,0,0.65)] backdrop-blur-md flex items-center justify-center ${
+          className={`relative w-full h-full rounded-2xl overflow-hidden bg-gradient-to-b from-[#1c1f32]/90 to-[#131522]/95 border border-amber-500/40 shadow-[0_10px_28px_rgba(0,0,0,0.65)] backdrop-blur-md flex items-center justify-center transition-colors ${
             fitMode === 'cover' ? 'p-0' : 'p-2'
           }`}
         >
-          {/* Skeleton Shimmer while downloading (hanya jika benar-benar belum siap) */}
-          {!imageLoaded && (
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#131522] animate-pulse">
-              <div
-                className="w-16 h-24 rounded-2xl blur-lg opacity-50"
-                style={{ backgroundColor: item.bottleThemeColor || '#f59e0b' }}
-              />
-              <span className="text-[9px] text-amber-300 font-mono tracking-widest mt-1">
-                MEMUAT FOTO...
-              </span>
-            </div>
-          )}
-
           <img
-            ref={imgRef}
             src={customPhoto!}
             alt={`Botol ${item.name}`}
             loading="eager"
-            decoding="sync"
-            onLoad={() => setImageLoaded(true)}
+            decoding="async"
+            onLoad={() => {
+              if (customPhoto) loadedPhotoSet.add(customPhoto);
+            }}
             onError={() => setImageError(true)}
-            className={`w-full h-full transition-all duration-300 group-hover:scale-105 ${
+            className={`w-full h-full transition-transform duration-300 group-hover:scale-105 ${
               fitMode === 'cover'
                 ? 'object-cover'
                 : 'object-contain filter drop-shadow-[0_10px_22px_rgba(0,0,0,0.85)]'
-            } ${imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+            }`}
           />
         </div>
       ) : (

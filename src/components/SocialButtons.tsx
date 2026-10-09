@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Share2, Check, ExternalLink } from 'lucide-react';
+import { getPublicShareUrl } from '../utils/shareUtils';
 
 interface SocialButtonsProps {
   onShowToast: (message: string) => void;
@@ -9,10 +10,11 @@ export const SocialButtons: React.FC<SocialButtonsProps> = ({ onShowToast }) => 
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
+    const publicUrl = getPublicShareUrl();
     const shareData = {
       title: 'SINKI Parfums - Haute Parfumerie',
       text: 'Rasakan kemewahan aroma Amber Wood & Spice dan mahakarya parfum SINKI!',
-      url: window.location.href,
+      url: publicUrl,
     };
 
     if (navigator.share) {
@@ -31,7 +33,8 @@ export const SocialButtons: React.FC<SocialButtonsProps> = ({ onShowToast }) => 
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
+    const publicUrl = getPublicShareUrl();
+    navigator.clipboard.writeText(publicUrl);
     setCopied(true);
     onShowToast('Tautan SINKI berhasil disalin ke papan klip!');
     setTimeout(() => setCopied(false), 2500);

@@ -38,6 +38,14 @@ export default function App() {
   const [isAssetModalOpen, setIsAssetModalOpen] = useState(false);
 
   useEffect(() => {
+    // Preload initial stored Top 11 photos immediately into browser cache
+    Object.values(top11Photos).forEach((photoUrl) => {
+      if (photoUrl && typeof photoUrl === 'string') {
+        const preloadImg = new Image();
+        preloadImg.src = photoUrl;
+      }
+    });
+
     // Sync with server on initial load
     fetchServerAssets().then((assets) => {
       if (assets.logo) setCustomLogo(assets.logo);
@@ -45,7 +53,7 @@ export default function App() {
       if (assets.qrisImage) setCustomQris(assets.qrisImage);
       if (assets.top11) {
         setTop11Photos(assets.top11);
-        // Preload all bottle images in background immediately into browser cache
+        // Preload all updated bottle images in background immediately into browser cache
         Object.values(assets.top11).forEach((photoUrl) => {
           if (photoUrl && typeof photoUrl === 'string') {
             const preloadImg = new Image();

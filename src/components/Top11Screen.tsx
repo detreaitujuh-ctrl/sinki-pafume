@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Crown, MessageCircle, ChevronLeft, ChevronRight, LayoutGrid, Clock, Flame, ArrowLeft, Heart, Maximize2, Minimize2 } from 'lucide-react';
 import { TOP_11_DATA, Top11Item } from '../data/top11';
-import { PerfumeBottleVisual } from './PerfumeBottleVisual';
+import { PerfumeBottleVisual, loadedPhotoSet } from './PerfumeBottleVisual';
 
 interface Top11ScreenProps {
   top11Photos: Record<string, string>;
@@ -51,11 +51,12 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
     }
   }, [isActive]);
 
-  // Preload semua foto botol ke memori browser agar saat digeser muncul instan 0 detik
+  // Preload semua foto botol ke memori browser agar saat digeser atau dibuka muncul instan 0 detik
   useEffect(() => {
     Object.values(top11Photos).forEach((url) => {
       if (url && typeof url === 'string') {
         const img = new Image();
+        img.onload = () => loadedPhotoSet.add(url);
         img.src = url;
       }
     });
@@ -69,6 +70,7 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
       const url = top11Photos[item.id];
       if (url) {
         const img = new Image();
+        img.onload = () => loadedPhotoSet.add(url);
         img.src = url;
       }
     });
@@ -199,11 +201,14 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
 
       {/* MAIN CONTENT AREA */}
       <div className="flex-1 overflow-y-auto no-scrollbar p-3.5 pb-24">
-        {viewMode === 'spotlight' ? (
-          /* ==========================================
-             VIEW 1: LUXURY SPOTLIGHT HERO CARD VIEW
-             ========================================== */
-          <div className="space-y-3.5 animate-in fade-in duration-300">
+        {/* ==========================================
+           VIEW 1: LUXURY SPOTLIGHT HERO CARD VIEW
+           ========================================== */}
+        <div
+          className={`space-y-3.5 transition-opacity duration-200 ${
+            viewMode === 'spotlight' ? 'block' : 'hidden'
+          }`}
+        >
             {/* Spotlight Card with Glassmorphism Border & Deep Royal Charcoal Gradient */}
             <div className="relative rounded-3xl bg-gradient-to-b from-[#1e2235]/95 via-[#181a2b]/95 to-[#131524]/95 border border-amber-400/40 p-4 shadow-[0_15px_45px_rgba(0,0,0,0.7)] overflow-hidden backdrop-blur-md">
               {/* Top Card Bar: Rank Badge + Heart */}
@@ -357,74 +362,89 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
                 </button>
               </div>
             </div>
-          </div>
-        ) : (
-          /* ==========================================
-             VIEW 2: GRID SHOWCASE 2x2 (1 BARIS 2 KOTAK)
-             ========================================== */
-          <div className="space-y-3 animate-in fade-in duration-300">
-            <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-              {TOP_11_DATA.map((item) => {
-                const isFav = favorites.includes(item.id);
+        </div>
 
-                return (
-                  <div
-                    key={item.id}
-                    className="relative flex flex-col justify-between p-3 rounded-2xl bg-gradient-to-b from-[#1c1f32] to-[#141626] hover:from-[#22263d] hover:to-[#171a2c] border border-amber-500/35 hover:border-amber-400/70 shadow-[0_8px_25px_rgba(0,0,0,0.55)] transition-all"
-                  >
-                    {/* Top Row: Rank Tag + Heart */}
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="font-mono text-[9.5px] font-black px-1.5 py-0.5 rounded-md bg-amber-500/25 text-amber-300 border border-amber-500/50 shadow-sm">
-                        #{item.rank}
-                      </span>
-                      <button
-                        onClick={() => toggleFavorite(item.id, item.name)}
-                        className="p-1 rounded-full text-slate-300 hover:text-red-400"
-                      >
-                        <Heart
-                          size={13}
-                          className={isFav ? 'fill-red-500 text-red-500' : ''}
-                        />
-                      </button>
-                    </div>
+        {/* ==========================================
+           VIEW 2: GRID SHOWCASE 2x2 (1 BARIS 2 KOTAK)
+           ========================================== */}
+        <div
+          className={`space-y-3 transition-opacity duration-200 ${
+            viewMode === 'grid' ? 'block' : 'hidden'
+          }`}
+        >
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+            {TOP_11_DATA.map((item) => {
+              const isFav = favorites.includes(item.id);
 
-                    {/* Bottle Visual Container (100% Clean) */}
-                    <div className="w-full h-32 my-1">
-                      <PerfumeBottleVisual
-                        item={item}
-                        customPhoto={top11Photos[item.id]}
-                        size="sm"
-                        fitMode={fitMode}
-                      />
-                    </div>
-
-                    {/* Info */}
-                    <div className="space-y-1 mb-2">
-                      <span className="text-[8.5px] font-mono text-amber-300 font-bold uppercase tracking-widest block">
-                        {item.type}
-                      </span>
-                      <h4 className="font-display text-xs font-black text-white leading-tight line-clamp-1">
-                        {item.name}
-                      </h4>
-                      <p className="text-[8.5px] text-amber-200/90 font-medium italic line-clamp-2 leading-tight">
-                        {item.subtitle}
-                      </p>
-                    </div>
-
-                    {/* Order Button */}
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => {
+                    const idx = TOP_11_DATA.findIndex((d) => d.id === item.id);
+                    if (idx !== -1) setCurrentIndex(idx);
+                    setViewMode('spotlight');
+                  }}
+                  className="relative flex flex-col justify-between p-3 rounded-2xl bg-gradient-to-b from-[#1c1f32] to-[#141626] hover:from-[#22263d] hover:to-[#171a2c] border border-amber-500/35 hover:border-amber-400/70 shadow-[0_8px_25px_rgba(0,0,0,0.55)] transition-all cursor-pointer active:scale-[0.99]"
+                >
+                  {/* Top Row: Rank Tag + Heart */}
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-mono text-[9.5px] font-black px-1.5 py-0.5 rounded-md bg-amber-500/25 text-amber-300 border border-amber-500/50 shadow-sm">
+                      #{item.rank}
+                    </span>
                     <button
-                      onClick={() => handleOrderWhatsApp(item)}
-                      className="w-full py-1.5 px-2 rounded-xl bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 border border-amber-500/40 text-amber-300 text-[9.5px] font-bold flex items-center justify-center gap-1 transition-all active:scale-95 shadow-sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(item.id, item.name);
+                      }}
+                      className="p-1 rounded-full text-slate-300 hover:text-red-400 transition-colors"
+                      title="Favorit"
                     >
-                      <MessageCircle size={11} />
-                      <span>Pesan Varian</span>
+                      <Heart
+                        size={13}
+                        className={isFav ? 'fill-red-500 text-red-500' : ''}
+                      />
                     </button>
                   </div>
-                );
-              })}
-            </div>
+
+                  {/* Bottle Visual Container (100% Clean) */}
+                  <div className="w-full h-32 my-1">
+                    <PerfumeBottleVisual
+                      item={item}
+                      customPhoto={top11Photos[item.id]}
+                      size="sm"
+                      fitMode={fitMode}
+                    />
+                  </div>
+
+                  {/* Info */}
+                  <div className="space-y-1 mb-2">
+                    <span className="text-[8.5px] font-mono text-amber-300 font-bold uppercase tracking-widest block">
+                      {item.type}
+                    </span>
+                    <h4 className="font-display text-xs font-black text-white leading-tight line-clamp-1">
+                      {item.name}
+                    </h4>
+                    <p className="text-[8.5px] text-amber-200/90 font-medium italic line-clamp-2 leading-tight">
+                      {item.subtitle}
+                    </p>
+                  </div>
+
+                  {/* Order Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOrderWhatsApp(item);
+                    }}
+                    className="w-full py-1.5 px-2 rounded-xl bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 border border-amber-500/40 text-amber-300 text-[9.5px] font-bold flex items-center justify-center gap-1 transition-all active:scale-95 shadow-sm"
+                  >
+                    <MessageCircle size={11} />
+                    <span>Pesan Varian</span>
+                  </button>
+                </div>
+              );
+            })}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
