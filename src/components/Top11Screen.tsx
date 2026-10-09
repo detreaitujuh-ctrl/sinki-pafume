@@ -142,7 +142,7 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
             </button>
             <div className="flex items-center gap-1.5">
               <Crown size={16} className="text-amber-400" />
-              <h2 className="font-display text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 tracking-wider uppercase">
+              <h2 className="font-display text-sm font-extrabold text-amber-400 tracking-wider uppercase">
                 Top 11 Parfum
               </h2>
             </div>

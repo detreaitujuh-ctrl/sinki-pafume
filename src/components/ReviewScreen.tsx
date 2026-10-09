@@ -296,7 +296,7 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
             className="cursor-pointer select-none py-1 px-1.5 rounded-lg active:scale-95 transition-transform"
             title="Ketuk logo 5x untuk akses pengelola"
           >
-            <h2 className="font-display text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500 tracking-wider uppercase truncate">
+            <h2 className="font-display text-sm font-extrabold text-amber-400 tracking-wider uppercase truncate">
               SINKI
             </h2>
             <span className="text-[9.5px] font-mono text-amber-300 font-bold block -mt-0.5">
