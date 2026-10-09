@@ -189,18 +189,63 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </p>
           </div>
 
-          {/* Share Button: Curved Forward Arrow ala TikTok */}
+          {/* Share Button: 3D TikTok-Style Curved Arrow (Compact & Smaller) */}
           <button
             onClick={handleShare}
-            className="shrink-0 w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 text-slate-950 flex items-center justify-center shadow-[0_4px_15px_rgba(212,163,89,0.3)] hover:brightness-110 active:scale-90 transition-all"
+            className="group shrink-0 relative w-7 h-7 rounded-lg bg-gradient-to-b from-[#FFE382] via-[#E5A93C] to-[#B3791B] p-[1px] shadow-[0_3px_8px_rgba(0,0,0,0.5),0_1px_2px_rgba(255,255,255,0.4)_inset,0_2px_4px_rgba(212,163,89,0.35)] hover:shadow-[0_4px_12px_rgba(245,186,73,0.5)] hover:brightness-110 active:scale-90 active:translate-y-0.5 transition-all flex items-center justify-center select-none"
             title="Bagikan SINKI"
             aria-label="Bagikan"
           >
-            {copied ? (
-              <Check size={17} className="stroke-[2.5]" />
-            ) : (
-              <Forward size={17} className="stroke-[2.5]" />
-            )}
+            {/* Inner 3D Chamfer Bevel */}
+            <div className="w-full h-full rounded-[7px] bg-gradient-to-b from-[#2a2113] via-[#1f180d] to-[#140f08] flex items-center justify-center relative overflow-hidden">
+              {/* Subtle 3D Top Specular Glaze */}
+              <div className="absolute inset-x-0 top-0 h-[45%] bg-gradient-to-b from-white/25 to-transparent pointer-events-none" />
+
+              {copied ? (
+                <Check size={13} className="text-amber-300 stroke-[3] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] z-10" />
+              ) : (
+                /* 3D TikTok Share Curved Arrow SVG */
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-3.5 h-3.5 z-10 filter drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.9)] transform group-hover:scale-105 transition-transform"
+                >
+                  <defs>
+                    <linearGradient id="tiktok3dArrowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#FFF2B2" />
+                      <stop offset="35%" stopColor="#FFD54F" />
+                      <stop offset="75%" stopColor="#FFA000" />
+                      <stop offset="100%" stopColor="#D97706" />
+                    </linearGradient>
+                    <linearGradient id="tiktok3dArrowEdge" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#8A5100" stopOpacity="0.4" />
+                    </linearGradient>
+                  </defs>
+                  {/* Subtle 3D Depth Underlay */}
+                  <path
+                    d="M13.8 4.2 L22 11.5 L13.8 18.8 V14.6 C8.4 14.6 4.3 16.8 2 21 C2.9 14.7 6.8 9.2 13.8 8.4 V4.2 Z"
+                    fill="#452600"
+                    transform="translate(0, 0.9)"
+                  />
+                  {/* Main 3D Curved Arrow Body */}
+                  <path
+                    d="M13.8 4.2 L22 11.5 L13.8 18.8 V14.6 C8.4 14.6 4.3 16.8 2 21 C2.9 14.7 6.8 9.2 13.8 8.4 V4.2 Z"
+                    fill="url(#tiktok3dArrowGrad)"
+                    stroke="url(#tiktok3dArrowEdge)"
+                    strokeWidth="0.6"
+                    strokeLinejoin="round"
+                  />
+                  {/* Specular Highlight along upper curve */}
+                  <path
+                    d="M14 5.5 L20.2 11.5 L14 17.2 V14.8 C8.8 14.8 5 17 3 20.2 C3.9 15.2 7.4 10.2 14 9.4 V5.5 Z"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.7)"
+                    strokeWidth="0.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              )}
+            </div>
           </button>
         </div>
 
