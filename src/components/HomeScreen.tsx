@@ -145,13 +145,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <div className="text-center pt-1.5 pb-1 shrink-0 relative z-10 flex flex-col items-center justify-center select-none">
         <h1
           data-text="SINKI"
-          className="font-display text-3xl font-extrabold tracking-[0.22em] -mr-[0.22em] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)] thin-light-sheen"
+          className="font-display text-3xl font-extrabold tracking-[0.22em] -mr-[0.22em] haute-gold-title"
         >
           SINKI
         </h1>
         <span
           data-text="Eau de Parfum"
-          className="font-display text-[10.5px] font-semibold tracking-[0.3em] -mr-[0.3em] text-amber-200/90 uppercase mt-1 drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)] thin-light-sheen"
+          className="font-display text-[10.5px] font-semibold tracking-[0.3em] -mr-[0.3em] uppercase mt-1 haute-gold-subtitle"
         >
           Eau de Parfum
         </span>

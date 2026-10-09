@@ -23,13 +23,13 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
             <div>
               <span
                 data-text="SINKI"
-                className="font-display font-extrabold text-lg tracking-[0.2em] text-white block thin-light-sheen"
+                className="font-display font-extrabold text-lg tracking-[0.2em] block haute-gold-title"
               >
                 SINKI
               </span>
               <span
                 data-text="Eau de Parfum"
-                className="text-[10px] uppercase tracking-widest text-amber-200/90 font-semibold block mt-0.5 thin-light-sheen"
+                className="text-[10px] uppercase tracking-widest font-semibold block mt-0.5 haute-gold-subtitle"
               >
                 Eau de Parfum
               </span>
