@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Forward, Check, ExternalLink, Menu, ArrowRight } from 'lucide-react';
-import defaultChibiImg from '../assets/images/sinki_chibi_couple_1791185013192.jpg';
+import { DEFAULT_CHIBI } from '../utils/assetStorage';
 
 interface HomeScreenProps {
   onShowToast: (message: string) => void;
@@ -157,7 +157,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <div className="relative w-full max-w-[275px] aspect-square rounded-2xl overflow-hidden p-[1px] bg-gradient-to-b from-amber-400/40 via-white/20 to-amber-500/20 shadow-[0_15px_40px_rgba(0,0,0,0.75)] border border-white/10 transition-transform">
           <div className="relative w-full h-full rounded-[15px] overflow-hidden bg-gradient-to-b from-[#1e2235] to-[#141626] flex items-center justify-center shadow-inner">
             <img
-              src={customChibi || defaultChibiImg}
+              src={customChibi || DEFAULT_CHIBI}
               alt="Karakter Chibi SINKI Parfums"
               className="w-full h-full object-cover object-center filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
             />

@@ -134,7 +134,7 @@ app.post('/api/owner/update-assets', async (req, res) => {
 
   if (chibi !== undefined) {
     if (chibi) {
-      const up = await uploadToSupabaseWithOverwrite('sinki_chibi.jpg', chibi);
+      const up = await uploadToSupabaseWithOverwrite('sinki_chibi.png', chibi);
       newChibi = up.success && up.url ? up.url : chibi;
     } else {
       newChibi = null;
