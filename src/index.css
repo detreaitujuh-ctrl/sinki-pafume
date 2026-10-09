@@ -41,25 +41,25 @@
   background: radial-gradient(circle, rgba(251, 191, 36, 0.45) 0%, rgba(217, 119, 6, 0.22) 50%, transparent 75%);
 }
 
-/* Haute Horlogerie & High Perfumery: Metallic Gold with White Specular Diamond Sweep */
+/* Haute Horlogerie & High Perfumery: Rich Imperial Gold with Vivid Diamond Prismatic Beam */
 @keyframes hauteSpecularSweep {
   0% {
-    background-position: -240% center;
+    background-position: -220% center;
     opacity: 0;
   }
-  3% {
+  2% {
     opacity: 1;
   }
-  26% {
-    background-position: 175% center;
+  28% {
+    background-position: 180% center;
     opacity: 1;
   }
-  29% {
-    background-position: 175% center;
+  31% {
+    background-position: 180% center;
     opacity: 0;
   }
   100% {
-    background-position: 175% center;
+    background-position: 180% center;
     opacity: 0;
   }
 }
@@ -67,18 +67,18 @@
 .haute-gold-title {
   position: relative;
   display: inline-block;
-  /* Multi-stop Parisian French Satin Gold metallic gradient */
+  /* Rich Imperial Gold with deep metallic bevel and warm radiance */
   background: linear-gradient(
     180deg,
-    #FFF9E6 0%,
-    #F8E7BE 22%,
-    #E4BA68 50%,
-    #C49337 78%,
-    #9A6F24 100%
+    #FDE49E 0%,
+    #F6D06D 24%,
+    #DC9F30 52%,
+    #A87313 78%,
+    #7B510A 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 16px rgba(228, 186, 104, 0.3));
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 18px rgba(220, 159, 48, 0.35));
 }
 
 .haute-gold-title::after {
@@ -96,22 +96,25 @@
   letter-spacing: inherit;
   text-align: inherit;
   pointer-events: none;
-  /* Ultra-refined diamond specular white blade */
+  /* Option 1: Diamond Prismatic Beam (Clear, brilliant pure white core with luminous crystal glow) */
   background: linear-gradient(
-    115deg,
+    110deg,
     transparent 0%,
-    transparent 42%,
-    rgba(255, 249, 230, 0.45) 47%,
-    #FFFFFF 50%,
-    rgba(255, 249, 230, 0.45) 53%,
-    transparent 58%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.25) 38%,
+    rgba(255, 255, 255, 0.8) 45%,
+    #FFFFFF 48%,
+    #FFFFFF 52%,
+    rgba(255, 255, 255, 0.8) 55%,
+    rgba(255, 255, 255, 0.25) 62%,
+    transparent 70%,
     transparent 100%
   );
-  background-size: 260% 100%;
+  background-size: 240% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: hauteSpecularSweep 6.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 16px rgba(248, 231, 190, 0.6));
+  animation: hauteSpecularSweep 6.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1)) drop-shadow(0 0 22px rgba(254, 240, 199, 0.85));
 }
 
 .haute-gold-subtitle {
@@ -119,13 +122,14 @@
   display: inline-block;
   background: linear-gradient(
     180deg,
-    #FFF8E7 0%,
-    #F3DEAA 45%,
-    #C89B42 100%
+    #FDE8B3 0%,
+    #F7D47C 35%,
+    #C9942D 85%,
+    #936713 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 1px 5px rgba(0, 0, 0, 0.85));
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.85));
 }
 
 .haute-gold-subtitle::after {
@@ -144,20 +148,23 @@
   text-align: inherit;
   pointer-events: none;
   background: linear-gradient(
-    115deg,
+    110deg,
     transparent 0%,
-    transparent 42%,
-    rgba(255, 249, 230, 0.4) 47%,
-    #FFFFFF 50%,
-    rgba(255, 249, 230, 0.4) 53%,
-    transparent 58%,
+    transparent 32%,
+    rgba(255, 255, 255, 0.3) 40%,
+    rgba(255, 255, 255, 0.85) 46%,
+    #FFFFFF 49%,
+    #FFFFFF 51%,
+    rgba(255, 255, 255, 0.85) 54%,
+    rgba(255, 255, 255, 0.3) 60%,
+    transparent 68%,
     transparent 100%
   );
-  background-size: 260% 100%;
+  background-size: 240% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: hauteSpecularSweep 6.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.85));
+  animation: hauteSpecularSweep 6.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.95));
 }
 
 .luxury-gold-subtle-focal {
