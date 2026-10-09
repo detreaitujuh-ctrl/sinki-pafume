@@ -89,11 +89,11 @@ export const QrisPaymentCard: React.FC<QrisPaymentCardProps> = ({
   // Verifikasi PIN Pemilik Toko
   const handleVerifyOwnerPin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (ownerPin === '1995' || ownerPin === '1234') {
+    if (ownerPin === '1995') {
       setIsPinVerified(true);
       setPinError('');
     } else {
-      setPinError('PIN salah! Masukkan PIN pemilik (1995).');
+      setPinError('PIN salah! Silakan coba lagi.');
     }
   };
 
@@ -193,8 +193,8 @@ export const QrisPaymentCard: React.FC<QrisPaymentCardProps> = ({
               />
             </div>
 
-            <span className="text-[8.5px] text-slate-400 font-mono mt-1 block">
-              (Ketuk kotak 5x untuk pasang foto QRIS asli toko)
+            <span className="text-[9px] text-slate-400 font-medium mt-1 block">
+              Scan dengan BCA, Mandiri, BRI, GoPay, OVO, Dana & ShopeePay
             </span>
           </div>
         )}
@@ -276,7 +276,6 @@ export const QrisPaymentCard: React.FC<QrisPaymentCardProps> = ({
                   {pinError && (
                     <p className="text-[10px] text-red-400 font-medium">{pinError}</p>
                   )}
-                  <p className="text-[8.5px] text-slate-500 font-mono">(PIN Pemilik: 1995)</p>
                   <button
                     type="submit"
                     className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all active:scale-95"

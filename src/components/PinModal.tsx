@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, X, KeyRound, AlertCircle, ArrowRight } from 'lucide-react';
+import { Lock, X, KeyRound, AlertCircle } from 'lucide-react';
 
 interface PinModalProps {
   isOpen: boolean;
@@ -72,17 +72,12 @@ export const PinModal: React.FC<PinModalProps> = ({
       setError(false);
     } else {
       setError(true);
-      onShowToast('PIN Pemilik salah! Silakan coba lagi (PIN: 1995)');
+      onShowToast('PIN Pemilik salah! Silakan coba lagi.');
       setTimeout(() => {
         setPin('');
         setError(false);
       }, 1200);
     }
-  };
-
-  const handleQuickFill = () => {
-    setPin('1995');
-    validatePin('1995');
   };
 
   return (
@@ -113,8 +108,8 @@ export const PinModal: React.FC<PinModalProps> = ({
           <h4 className="text-sm font-bold text-white tracking-wide">
             Masukkan PIN Pemilik
           </h4>
-          <p className="text-[10px] text-amber-200/80 mt-1">
-            Gunakan tombol angka di bawah atau ketik di keyboard: <strong className="text-amber-400">1995</strong>
+          <p className="text-[10px] text-slate-400 mt-1">
+            Gunakan tombol angka di bawah atau ketik di keyboard
           </p>
         </div>
 
@@ -139,7 +134,7 @@ export const PinModal: React.FC<PinModalProps> = ({
 
         {error && (
           <p className="text-[11px] text-red-400 flex items-center justify-center gap-1 font-medium animate-bounce">
-            <AlertCircle size={13} /> PIN Salah! PIN bawaan adalah 1995
+            <AlertCircle size={13} /> PIN Salah! Silakan coba lagi
           </p>
         )}
 
@@ -168,17 +163,6 @@ export const PinModal: React.FC<PinModalProps> = ({
             className="py-3 rounded-2xl bg-white/5 hover:bg-red-500/25 active:scale-95 border border-white/10 hover:border-red-500/40 text-slate-300 font-medium text-xs transition-all flex items-center justify-center"
           >
             Hapus
-          </button>
-        </div>
-
-        {/* Quick helper for the owner */}
-        <div className="pt-2">
-          <button
-            onClick={handleQuickFill}
-            className="w-full py-2 px-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
-          >
-            <span>Buka Cepat dengan PIN 1995</span>
-            <ArrowRight size={13} />
           </button>
         </div>
       </div>

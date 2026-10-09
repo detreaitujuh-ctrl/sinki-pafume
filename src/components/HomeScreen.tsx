@@ -142,12 +142,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       </header>
 
       {/* TITLE "SINKI": Positioned at the top above the Chibi */}
-      <div className="text-center pt-1 pb-0.5 shrink-0 relative z-10 flex flex-col items-center justify-center">
-        <h1 className="font-display text-3xl font-extrabold tracking-[0.2em] text-white drop-shadow-[0_2px_12px_rgba(255,255,255,0.25)] pl-[0.2em]">
+      <div className="text-center pt-1.5 pb-1 shrink-0 relative z-10 flex flex-col items-center justify-center select-none">
+        <h1
+          data-text="SINKI"
+          className="font-display text-3xl font-extrabold tracking-[0.22em] -mr-[0.22em] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)] thin-light-sheen"
+        >
           SINKI
         </h1>
-        <span className="font-display text-[9px] font-semibold tracking-[0.35em] text-slate-300 uppercase mt-0.5 pl-[0.35em]">
-          Eau De Parfum
+        <span
+          data-text="Eau de Parfum"
+          className="font-display text-[10.5px] font-semibold tracking-[0.3em] -mr-[0.3em] text-amber-200/90 uppercase mt-1 drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)] thin-light-sheen"
+        >
+          Eau de Parfum
         </span>
       </div>
 

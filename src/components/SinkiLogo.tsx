@@ -102,7 +102,7 @@ export const SinkiLogo: React.FC<SinkiLogoProps> = ({
       {showSubtitle && (
         <div className="mt-1 space-y-0.5">
           <p className="text-[10px] md:text-xs font-semibold tracking-[0.28em] text-amber-200/90 uppercase">
-            Eau De Parfum
+            Eau de Parfum
           </p>
           <p className="text-[8px] md:text-[9px] tracking-[0.2em] text-amber-400/60 uppercase font-medium">
             Amber Wood & Spice

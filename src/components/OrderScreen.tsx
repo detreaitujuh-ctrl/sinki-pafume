@@ -11,6 +11,10 @@ import {
   Truck,
   QrCode,
   Tag,
+  Clock,
+  Eye,
+  EyeOff,
+  ShieldCheck,
 } from 'lucide-react';
 import { TOP_11_DATA } from '../data/top11';
 import { QrisPaymentCard } from './QrisPaymentCard';
@@ -53,7 +57,7 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
   const [showPriceList, setShowPriceList] = useState(false);
 
   // Show QRIS directly
-  const [showQris, setShowQris] = useState(true);
+  const [showQris, setShowQris] = useState(false);
 
   // Dynamic Active Pricing Configuration (Editable by Owner via Secret Panel)
   const activePricing = pricing || getStoredPricing();
@@ -82,10 +86,10 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
   const handleCheckoutWhatsApp = () => {
     const tierName =
       tier === 'non_premium'
-        ? 'Non Premium (Reguler)'
+        ? 'Classic EDP (Ketahanan 6-8 Jam)'
         : tier === 'premium'
-        ? `Premium (Rp ${currentPremiumRate.toLocaleString('id-ID')}/ml)`
-        : `Mykonos (Rp ${currentMykonosRate.toLocaleString('id-ID')}/ml)`;
+        ? `Premium Extrait (Ketahanan 8-12 Jam - Rp ${currentPremiumRate.toLocaleString('id-ID')}/ml)`
+        : `Mykonos Series (Ketahanan Seharian - Rp ${currentMykonosRate.toLocaleString('id-ID')}/ml)`;
 
     const message = [
       `*PESANAN PARFUM SINKI*`,
@@ -195,13 +199,15 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
               </button>
             </div>
 
-            {/* Price Table 1: Non Premium */}
+            {/* Price Table 1: Classic EDP */}
             <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 space-y-1.5">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold text-amber-300 flex items-center gap-1">
-                  <Sparkles size={12} /> Non Premium
+                  <Sparkles size={12} /> Classic EDP
                 </span>
-                <span className="text-[9px] font-mono text-slate-400">Paket Hemat</span>
+                <span className="text-[9px] font-mono text-emerald-400 font-bold bg-emerald-500/15 px-1.5 py-0.5 rounded">
+                  ⏱️ Awet 6–8 Jam
+                </span>
               </div>
               <div className="grid grid-cols-3 gap-1 text-[10px]">
                 {BOTTLE_SIZES.map((s) => (
@@ -221,8 +227,8 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
                 <span className="text-[11px] font-bold text-yellow-300 flex items-center gap-1">
                   <Crown size={12} /> Premium
                 </span>
-                <span className="text-[10px] font-mono font-extrabold text-yellow-300 bg-yellow-500/15 px-1.5 py-0.5 rounded">
-                  {currentPremiumRate.toLocaleString('id-ID')} / ml
+                <span className="text-[9px] font-mono font-bold text-yellow-300 bg-yellow-500/15 px-1.5 py-0.5 rounded">
+                  ⏱️ Awet 8–12 Jam • {currentPremiumRate.toLocaleString('id-ID')} / ml
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-1 text-[10px]">
@@ -241,10 +247,10 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
             <div className="p-2.5 rounded-xl bg-black/40 border border-rose-500/20 space-y-1.5">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold text-rose-300 flex items-center gap-1">
-                  <Flame size={12} /> Mykonos
+                  <Flame size={12} /> Mykonos Series
                 </span>
-                <span className="text-[10px] font-mono font-extrabold text-rose-300 bg-rose-500/15 px-1.5 py-0.5 rounded">
-                  {currentMykonosRate.toLocaleString('id-ID')} / ml
+                <span className="text-[9px] font-mono font-bold text-rose-300 bg-rose-500/15 px-1.5 py-0.5 rounded">
+                  ⏱️ Awet Seharian • {currentMykonosRate.toLocaleString('id-ID')} / ml
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-1 text-[10px]">
@@ -263,28 +269,38 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
 
         {/* STEP 1: PILIH KATEGORI PARFUM */}
         <div className="p-4 rounded-3xl bg-gradient-to-b from-[#1e2235]/95 via-[#181a2b]/95 to-[#131524]/95 border border-amber-500/40 space-y-3 shadow-[0_10px_30px_rgba(0,0,0,0.6)] backdrop-blur-md">
-          <span className="text-[10.5px] font-black uppercase tracking-widest text-amber-300 flex items-center gap-1.5 drop-shadow-sm">
-            <Layers size={13} /> 1. Kategori Parfum
-          </span>
+          <div className="flex items-center justify-between">
+            <span className="text-[10.5px] font-black uppercase tracking-widest text-amber-300 flex items-center gap-1.5 drop-shadow-sm">
+              <Layers size={13} /> 1. Kategori Parfum & Ketahanan
+            </span>
+            <span className="text-[9.5px] text-amber-200/80 font-medium flex items-center gap-1">
+              <ShieldCheck size={11} className="text-emerald-400" /> Bibit Import Eropa
+            </span>
+          </div>
 
           <div className="grid grid-cols-3 gap-2">
-            {/* Non Premium */}
+            {/* Classic EDP (dulu Non Premium) */}
             <button
               onClick={() => setTier('non_premium')}
-              className={`p-2.5 rounded-2xl border text-left transition-all ${
+              className={`p-2.5 rounded-2xl border text-left transition-all relative overflow-hidden ${
                 tier === 'non_premium'
                   ? 'bg-amber-500/30 border-amber-400 shadow-[0_0_18px_rgba(245,186,73,0.35)]'
                   : 'bg-white/5 border-white/15 hover:border-white/30'
               }`}
             >
-              <div className="flex items-center gap-1 text-amber-300 mb-0.5 font-bold">
-                <Sparkles size={11} />
-                <span className="text-[9.5px] font-black uppercase">Reguler</span>
+              {/* Longevity Badge */}
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[9px] font-black font-mono text-emerald-300 bg-emerald-500/20 px-1.5 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-0.5">
+                  <Clock size={9} /> 6–8 Jam
+                </span>
               </div>
               <span className="font-display font-black text-xs text-white block leading-tight">
-                Non Premium
+                Classic EDP
               </span>
-              <span className="text-[9.5px] font-mono text-amber-300 font-bold block mt-1">
+              <span className="text-[9px] text-slate-300 block font-medium mt-0.5">
+                Daily Fresh
+              </span>
+              <span className="text-[10px] font-mono text-amber-300 font-extrabold block mt-1.5">
                 Mulai 17rb
               </span>
             </button>
@@ -292,44 +308,102 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
             {/* Premium */}
             <button
               onClick={() => setTier('premium')}
-              className={`p-2.5 rounded-2xl border text-left transition-all ${
+              className={`p-2.5 rounded-2xl border text-left transition-all relative overflow-hidden ${
                 tier === 'premium'
                   ? 'bg-amber-500/30 border-amber-400 shadow-[0_0_18px_rgba(245,186,73,0.35)]'
                   : 'bg-white/5 border-white/15 hover:border-white/30'
               }`}
             >
-              <div className="flex items-center gap-1 text-yellow-300 mb-0.5 font-bold">
-                <Crown size={11} />
-                <span className="text-[9.5px] font-black uppercase">Grade A</span>
+              {/* Longevity Badge */}
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[9px] font-black font-mono text-yellow-300 bg-yellow-500/20 px-1.5 py-0.5 rounded-full border border-yellow-500/30 flex items-center gap-0.5">
+                  <Clock size={9} /> 8–12 Jam
+                </span>
               </div>
               <span className="font-display font-black text-xs text-white block leading-tight">
                 Premium
               </span>
-              <span className="text-[9.5px] font-mono text-amber-300 font-bold block mt-1">
-                4.000 / ml
+              <span className="text-[9px] text-amber-200/90 block font-medium mt-0.5">
+                Konsentrasi Tinggi
+              </span>
+              <span className="text-[10px] font-mono text-amber-300 font-extrabold block mt-1.5">
+                {currentPremiumRate.toLocaleString('id-ID')} / ml
               </span>
             </button>
 
             {/* Mykonos */}
             <button
               onClick={() => setTier('mykonos')}
-              className={`p-2.5 rounded-2xl border text-left transition-all ${
+              className={`p-2.5 rounded-2xl border text-left transition-all relative overflow-hidden ${
                 tier === 'mykonos'
                   ? 'bg-amber-500/30 border-amber-400 shadow-[0_0_18px_rgba(245,186,73,0.35)]'
                   : 'bg-white/5 border-white/15 hover:border-white/30'
               }`}
             >
-              <div className="flex items-center gap-1 text-rose-300 mb-0.5 font-bold">
-                <Flame size={11} />
-                <span className="text-[9.5px] font-black uppercase">Top Tier</span>
+              {/* Longevity Badge */}
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[8.5px] font-black font-mono text-rose-300 bg-rose-500/20 px-1.5 py-0.5 rounded-full border border-rose-500/30 flex items-center gap-0.5">
+                  <Clock size={9} /> Seharian
+                </span>
               </div>
               <span className="font-display font-black text-xs text-white block leading-tight">
                 Mykonos
               </span>
-              <span className="text-[9.5px] font-mono text-amber-300 font-bold block mt-1">
-                3.000 / ml
+              <span className="text-[9px] text-rose-200/90 block font-medium mt-0.5">
+                Aroma Viral Mewah
+              </span>
+              <span className="text-[10px] font-mono text-amber-300 font-extrabold block mt-1.5">
+                {currentMykonosRate.toLocaleString('id-ID')} / ml
               </span>
             </button>
+          </div>
+
+          {/* Edukasi Keunggulan & Ketahanan (Membangun Kepercayaan Pembeli) */}
+          <div className="p-3 rounded-2xl bg-black/40 border border-amber-500/30 flex items-start gap-2.5 shadow-inner">
+            <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0 mt-0.5">
+              <Clock size={15} />
+            </div>
+            <div className="text-[11px] space-y-0.5 flex-1">
+              {tier === 'non_premium' && (
+                <>
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-amber-300">Pilihan Terpilih: Classic EDP</span>
+                    <span className="text-[9.5px] font-mono font-bold text-emerald-300 bg-emerald-500/20 px-1.5 py-0.2 rounded border border-emerald-500/30">
+                      Awet 6–8 Jam
+                    </span>
+                  </div>
+                  <p className="text-slate-300 text-[10.5px] leading-relaxed pt-0.5">
+                    Racikan harian beraroma segar dan bersih. Sangat pas untuk kuliah, nongkrong, dan rutinitas santai harian tanpa khawatir kantong bolong.
+                  </p>
+                </>
+              )}
+              {tier === 'premium' && (
+                <>
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-yellow-300">Pilihan Terpilih: Premium Extrait</span>
+                    <span className="text-[9.5px] font-mono font-bold text-yellow-300 bg-yellow-500/20 px-1.5 py-0.2 rounded border border-yellow-500/30">
+                      Awet 8–12 Jam
+                    </span>
+                  </div>
+                  <p className="text-slate-300 text-[10.5px] leading-relaxed pt-0.5">
+                    Konsentrasi bibit murni ekstrak grade A eropa. Jejak aroma kuat dan mewah, tahan banting untuk kerja di ruangan AC maupun aktivitas padat seharian.
+                  </p>
+                </>
+              )}
+              {tier === 'mykonos' && (
+                <>
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-rose-300">Pilihan Terpilih: Mykonos Series</span>
+                    <span className="text-[9.5px] font-mono font-bold text-rose-300 bg-rose-500/20 px-1.5 py-0.2 rounded border border-rose-500/30">
+                      Awet Seharian Penuh
+                    </span>
+                  </div>
+                  <p className="text-slate-300 text-[10.5px] leading-relaxed pt-0.5">
+                    Aroma viral berkelas mewah dengan formula pekat ekstra awet. Semerbak menempel kuat di serat pakaian dari pagi hingga malam hari.
+                  </p>
+                </>
+              )}
+            </div>
           </div>
 
           {/* STEP 2: PILIH UKURAN BOTOL */}
@@ -424,22 +498,65 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
           </div>
         </div>
 
-        {/* STEP 4: PEMBAYARAN QRIS RESMI (HANYA SINKI, BARCODE & HARGA) */}
+        {/* STEP 4: PEMBAYARAN QRIS RESMI (SEMBUNYIKAN BY DEFAULT, BUKA KETIKA MAU BAYAR) */}
         <div className="p-4 rounded-3xl bg-gradient-to-b from-[#1e2235]/95 to-[#141624]/95 border border-amber-500/35 space-y-3 shadow-[0_8px_25px_rgba(0,0,0,0.55)] backdrop-blur-md">
           <div className="flex items-center justify-between">
             <span className="text-[10.5px] font-black uppercase tracking-widest text-amber-300 flex items-center gap-1.5 drop-shadow-sm">
-              <QrCode size={13} /> Pembayaran QRIS SINKI
+              <QrCode size={13} /> 4. Pembayaran QRIS SINKI
             </span>
-            <button
-              onClick={() => setShowQris((prev) => !prev)}
-              className="text-[10.5px] text-amber-300 underline font-bold"
-            >
-              {showQris ? 'Sembunyikan' : 'Tampilkan QRIS'}
-            </button>
+            <span className="text-[9.5px] font-mono text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">
+              BCA • Mandiri • E-Wallet
+            </span>
           </div>
 
-          {showQris && (
-            <div className="pt-1 animate-in fade-in duration-200">
+          {!showQris ? (
+            /* Tampilan Ringkas Saat QRIS Disembunyikan */
+            <div className="p-3.5 rounded-2xl bg-black/35 border border-white/10 text-center space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 mx-auto shadow-inner">
+                <QrCode size={24} />
+              </div>
+
+              <div>
+                <span className="font-display font-extrabold text-xs text-white block">
+                  Mau Bayar Langsung Pakai QRIS?
+                </span>
+                <span className="text-[10px] text-slate-300 block mt-0.5 leading-snug">
+                  Mendukung semua Bank (BCA, Mandiri, BRI, BNI) & E-Wallet (GoPay, OVO, Dana, ShopeePay)
+                </span>
+              </div>
+
+              <div className="pt-0.5">
+                <button
+                  type="button"
+                  onClick={() => setShowQris(true)}
+                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 active:scale-98 text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 transition-all"
+                >
+                  <Eye size={15} />
+                  <span>Tampilkan Kode QRIS (Rp {totalAmount.toLocaleString('id-ID')})</span>
+                </button>
+              </div>
+
+              <p className="text-[9.5px] text-slate-400 font-mono">
+                Atau Anda juga bisa langsung chat WhatsApp di bawah tanpa buka QRIS sekarang.
+              </p>
+            </div>
+          ) : (
+            /* Tampilan QRIS Terbuka */
+            <div className="space-y-3 animate-in fade-in zoom-in-95 duration-200">
+              <div className="flex items-center justify-between px-1">
+                <span className="text-[10.5px] font-bold text-amber-200 flex items-center gap-1.5">
+                  <QrCode size={13} className="text-amber-400" /> Silakan Scan Barcode di Bawah:
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowQris(false)}
+                  className="text-[10px] text-amber-300 hover:text-white bg-white/10 hover:bg-white/15 px-2.5 py-1 rounded-lg border border-white/10 font-bold flex items-center gap-1 transition-colors"
+                >
+                  <EyeOff size={11} />
+                  <span>Sembunyikan QRIS</span>
+                </button>
+              </div>
+
               <QrisPaymentCard
                 amount={totalAmount}
                 onShowToast={onShowToast}

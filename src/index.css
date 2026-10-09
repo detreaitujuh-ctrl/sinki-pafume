@@ -41,6 +41,129 @@
   background: radial-gradient(circle, rgba(251, 191, 36, 0.45) 0%, rgba(217, 119, 6, 0.22) 50%, transparent 75%);
 }
 
+/* Thin Light Sheen Sweep Animation (Left to Right thin sweep in ~1.3s, reappears every 6.2s) */
+@keyframes thinLightSheenSweep {
+  0% {
+    background-position: -260% center;
+  }
+  22% {
+    background-position: 180% center;
+  }
+  100% {
+    background-position: 180% center;
+  }
+}
+
+.thin-light-sheen {
+  position: relative;
+  display: inline-block;
+}
+
+.thin-light-sheen::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: inherit;
+  margin: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 43%,
+    rgba(251, 191, 36, 0.4) 47%,
+    #FFFFFF 50%,
+    rgba(251, 191, 36, 0.4) 53%,
+    transparent 57%,
+    transparent 100%
+  );
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: thinLightSheenSweep 6.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 16px rgba(245, 186, 73, 0.45));
+}
+
+.luxury-gold-subtle-focal {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(253, 230, 138, 0.85) 0%, rgba(245, 186, 73, 0.85) 50%, rgba(217, 119, 6, 0.75) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.luxury-gold-subtle-focal::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(253, 230, 138, 0.4) 30%,
+    #FFFFFF 50%,
+    rgba(253, 230, 138, 0.4) 70%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: luxuryFocalSweepN 9.5s cubic-bezier(0.25, 1, 0.4, 1) infinite;
+}
+
+/* Fallback shimmer class */
+.luxury-gold-shimmer {
+  background: linear-gradient(
+    115deg,
+    #F3CE7A 0%,
+    #E8B960 14%,
+    #FDE68A 22%,
+    #FFFFFF 28%,
+    #FFFBEB 34%,
+    #F5BA49 44%,
+    #C68A2E 56%,
+    #E8B960 70%,
+    #F3CE7A 100%
+  );
+  background-size: 280% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  filter: drop-shadow(0 2px 10px rgba(232, 185, 96, 0.35));
+}
+
+.luxury-gold-subtle {
+  background: linear-gradient(
+    115deg,
+    rgba(253, 230, 138, 0.8) 0%,
+    rgba(245, 186, 73, 0.85) 15%,
+    #FFFFFF 28%,
+    rgba(253, 230, 138, 0.9) 36%,
+    rgba(217, 119, 6, 0.75) 50%,
+    rgba(253, 230, 138, 0.8) 100%
+  );
+  background-size: 280% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
 /* Reflective glassmorphism card rim */
 .glass-card-border {
   border: 1px solid rgba(245, 186, 73, 0.32);

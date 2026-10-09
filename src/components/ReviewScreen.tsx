@@ -14,71 +14,25 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { TOP_11_DATA } from '../data/top11';
+import {
+  ReviewItem,
+  INITIAL_4_REVIEWS,
+  getCachedReviews,
+  fetchReviewsFromSupabase,
+  saveReviewToSupabase,
+  deleteReviewFromSupabase,
+  likeReviewInSupabase,
+  resetReviewsToDefaultInSupabase,
+} from '../utils/reviewStorage';
 
-interface ReviewScreenProps {
+export type { ReviewItem };
+export { INITIAL_4_REVIEWS };
+
+export interface ReviewScreenProps {
   onBackToHome: () => void;
   onNavigateToOrder?: () => void;
   onShowToast: (msg: string) => void;
 }
-
-export interface ReviewItem {
-  id: string;
-  name: string;
-  emoji: string;
-  emojiLabel: string;
-  variant: string;
-  comment: string;
-  date: string;
-  likes: number;
-}
-
-// 4 ULASAN AUTENTIK SINKI PERFUME (FORMAT EMOJI, TANPA BINTANG, TEPAT 4 BARIS)
-export const INITIAL_4_REVIEWS: ReviewItem[] = [
-  {
-    id: 'rev-1',
-    name: 'Rian Ardiansyah',
-    emoji: '😍',
-    emojiLabel: 'Sangat Puas & Mewah',
-    variant: 'Mykonos Monaco Royale',
-    comment:
-      'Gila sih wanginya beneran mewah banget! Semprot pagi sebelum ngantor, malem pas pulang masih nempel kuat di kemeja. Rekan kerja cowo & cewe pada nanya pake parfum apa. Auto langganan terus di SINKI!',
-    date: 'Hari ini',
-    likes: 42,
-  },
-  {
-    id: 'rev-2',
-    name: 'Clarissa Putri',
-    emoji: '🥰',
-    emojiLabel: 'Suka Parah',
-    variant: 'Mykonos Isfahan',
-    comment:
-      'Rose oud-nya berkelas parah, nggak bikin pusing sama sekali. Wanginya kalem tapi ninggalin jejak harum pas lewat. Semprotan botolnya juga halus banget kayak parfum jutaan. Puas pol!',
-    date: 'Kemarin',
-    likes: 38,
-  },
-  {
-    id: 'rev-3',
-    name: 'Bagus Wicaksono',
-    emoji: '🔥',
-    emojiLabel: 'Tahan Seharian',
-    variant: 'Mykonos French Cognac',
-    comment:
-      'Packingnya tebel banget bubble wrap berlapis jadi botol kaca aman 100%. Aroma cognac dan kayu manisnya hangat maskulin elegan, cocok banget buat date night atau acara formal.',
-    date: '2 hari lalu',
-    likes: 29,
-  },
-  {
-    id: 'rev-4',
-    name: 'Nadia Safitri',
-    emoji: '✨',
-    emojiLabel: 'Wangi Elegan',
-    variant: 'Mykonos Blanche De Sinki',
-    comment:
-      'Buat yang suka wangi clean, fresh, aroma baju bersih mewah ala hotel bintang 5 wajib coba varian ini. Lembut banget ga nusuk hidung. Pasangan suka banget nyiumin terus.',
-    date: '3 hari lalu',
-    likes: 25,
-  },
-];
 
 // OPSI EMOJI YANG DAPAT DIPILIH
 const EMOJI_OPTIONS = [
@@ -121,21 +75,31 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
   onNavigateToOrder,
   onShowToast,
 }) => {
-  // State 4 Ulasan (disimpan di LocalStorage)
-  const [reviews, setReviews] = useState<ReviewItem[]>(() => {
-    try {
-      const saved = localStorage.getItem('sinki_reviews_v4');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.slice(0, 4);
+  // State Ulasan Terintegrasi Supabase (Cache Instan + Real-time Sync)
+  const [reviews, setReviews] = useState<ReviewItem[]>(getCachedReviews);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Muat ulasan terbaru dari Supabase saat layar dibuka & sinkronisasi berkala
+  useEffect(() => {
+    let isMounted = true;
+    const syncReviews = async () => {
+      try {
+        const latest = await fetchReviewsFromSupabase();
+        if (isMounted && latest && latest.length > 0) {
+          setReviews(latest);
         }
+      } catch (err) {
+        console.error('Sync reviews notice:', err);
       }
-      return INITIAL_4_REVIEWS;
-    } catch {
-      return INITIAL_4_REVIEWS;
-    }
-  });
+    };
+
+    syncReviews();
+    const interval = setInterval(syncReviews, 20000); // Sinkronisasi otomatis setiap 20 detik
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   const [likedReviews, setLikedReviews] = useState<string[]>([]);
 
@@ -157,7 +121,7 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
     }
   });
 
-  // Fitur Rahasia: Tekan Logo 5x untuk Akses Hapus dengan PIN
+  // Fitur Rahasia: Tekan Logo 5x untuk Akses Hapus dengan PIN Pemilik (1995)
   const [logoTapCount, setLogoTapCount] = useState(0);
   const [lastTapTime, setLastTapTime] = useState(0);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
@@ -165,18 +129,8 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState('');
 
-  // SINKI Secret Admin PIN (Default: 1234)
-  const SECRET_ADMIN_PIN = '1234';
-
-  const saveReviews = (newList: ReviewItem[]) => {
-    const limited = newList.slice(0, 4);
-    setReviews(limited);
-    try {
-      localStorage.setItem('sinki_reviews_v4', JSON.stringify(limited));
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  // PIN Pemilik SINKI (Dirahasiakan, tidak ditampilkan di antarmuka)
+  const SECRET_ADMIN_PIN = '1995';
 
   // Handler klik logo 5x
   const handleLogoTap = () => {
@@ -196,10 +150,10 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
     setLastTapTime(now);
   };
 
-  // Verifikasi PIN Admin
+  // Verifikasi PIN Pemilik
   const handleVerifyPin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pinInput === SECRET_ADMIN_PIN) {
+    if (pinInput.trim() === SECRET_ADMIN_PIN) {
       setIsAdminMode(true);
       setIsAdminModalOpen(false);
       setPinInput('');
@@ -210,50 +164,46 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
     }
   };
 
-  // Hapus Ulasan (Khusus Mode Admin)
-  const handleDeleteReview = (id: string, name: string) => {
-    const updated = reviews.filter((r) => r.id !== id);
-    // Jika ulasan kurang dari 4 setelah dihapus, tambahkan fallback ulasan dari daftar standar
-    if (updated.length < 4) {
-      const missingCount = 4 - updated.length;
-      const backupReviews = INITIAL_4_REVIEWS.filter(
-        (initRev) => !updated.some((u) => u.name === initRev.name)
-      );
-      for (let i = 0; i < missingCount && i < backupReviews.length; i++) {
-        updated.push({
-          ...backupReviews[i],
-          id: `rev-backup-${Date.now()}-${i}`,
-        });
-      }
+  // Hapus Ulasan (Khusus Mode Pemilik - Sinkron ke Supabase)
+  const handleDeleteReview = async (id: string, name: string) => {
+    try {
+      const result = await deleteReviewFromSupabase(id);
+      setReviews(result.reviews);
+      onShowToast(`Ulasan dari "${name}" berhasil dihapus dari sistem! 🗑️`);
+    } catch (err) {
+      console.error(err);
+      const filtered = reviews.filter((r) => r.id !== id);
+      setReviews(filtered);
+      onShowToast(`Ulasan dari "${name}" dihapus! 🗑️`);
     }
-
-    saveReviews(updated);
-    onShowToast(`Ulasan dari "${name}" berhasil dihapus! 🗑️`);
   };
 
-  // Reset ke 4 Ulasan Standar
-  const handleResetToDefault = () => {
-    saveReviews(INITIAL_4_REVIEWS);
-    onShowToast('4 Ulasan telah di-reset ke versi standar SINKI ✨');
+  // Reset ke Ulasan Standar (Khusus Mode Pemilik)
+  const handleResetToDefault = async () => {
+    try {
+      const res = await resetReviewsToDefaultInSupabase();
+      setReviews(res);
+      onShowToast('Ulasan telah di-reset ke versi standar SINKI ✨');
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  // Beri Love / Apresiasi Ulasan
-  const handleLike = (id: string) => {
+  // Beri Love / Apresiasi Ulasan (Sinkron ke Supabase)
+  const handleLike = async (id: string) => {
     if (likedReviews.includes(id)) {
       onShowToast('Anda sudah menyukai ulasan ini');
       return;
     }
 
-    const updated = reviews.map((r) =>
-      r.id === id ? { ...r, likes: r.likes + 1 } : r
-    );
-    saveReviews(updated);
     setLikedReviews((prev) => [...prev, id]);
+    const result = await likeReviewInSupabase(id);
+    setReviews(result.reviews);
     onShowToast('Terima kasih atas apresiasinya! 💖');
   };
 
-  // Submit Ulasan Baru
-  const handleSubmitReview = (e: React.FormEvent) => {
+  // Submit Ulasan Baru (Otomatis Masuk Supabase & Tampil Seketika)
+  const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // 1. Validasi Input Dasar
@@ -282,13 +232,11 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
     );
 
     if (containsInappropriate) {
-      alert(
-        'Pemberitahuan Sistem:\n\nUlasan tidak dapat dikirim karena terdeteksi kata atau kalimat yang kurang pantas.\n\nMohon gunakan kalimat yang sopan dan santun demi kenyamanan bersama.'
-      );
+      onShowToast('Ulasan ditolak: Terdeteksi kata atau kalimat yang kurang sopan.');
       return;
     }
 
-    // 4. Masukkan ulasan baru di baris teratas (Posisi #1), total tetap 4 baris!
+    // 4. Masukkan ulasan baru di baris teratas (Posisi #1)
     const newRev: ReviewItem = {
       id: `rev-${Date.now()}`,
       name: formName.trim(),
@@ -300,21 +248,29 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
       likes: 1,
     };
 
-    const updated = [newRev, ...reviews].slice(0, 4);
-    saveReviews(updated);
-
-    // Simpan waktu submit
-    setLastSubmitTime(now);
+    setIsSubmitting(true);
     try {
-      localStorage.setItem('sinki_last_review_submit', now.toString());
+      const res = await saveReviewToSupabase(newRev);
+      setReviews(res.reviews);
+
+      // Simpan waktu submit
+      setLastSubmitTime(now);
+      try {
+        localStorage.setItem('sinki_last_review_submit', now.toString());
+      } catch (err) {
+        console.error(err);
+      }
+
+      setIsWriteModalOpen(false);
+      setFormName('');
+      setFormComment('');
+      onShowToast(`Ulasan Anda berhasil dipublikasikan seketika! ${formEmoji}`);
     } catch (err) {
       console.error(err);
+      onShowToast('Ulasan berhasil dikirim!');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsWriteModalOpen(false);
-    setFormName('');
-    setFormComment('');
-    onShowToast(`Ulasan Anda berhasil dipublikasikan! ${formEmoji}`);
   };
 
   return (
@@ -405,7 +361,7 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
                 99% Pelanggan Sangat Puas
               </span>
               <span className="text-[10px] text-slate-200 font-medium block">
-                4 Ulasan Terbaru & Terverifikasi
+                {reviews.length} Ulasan Terbaru & Terverifikasi
               </span>
             </div>
           </div>
@@ -675,9 +631,10 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider transition-all active:scale-98 shadow-lg shadow-amber-500/20"
+                  disabled={isSubmitting}
+                  className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-black text-xs uppercase tracking-wider transition-all active:scale-98 shadow-lg shadow-amber-500/20"
                 >
-                  Kirim Ulasan Sekarang
+                  {isSubmitting ? 'Menyimpan Ulasan...' : 'Kirim Ulasan Sekarang'}
                 </button>
               </form>
             </div>
@@ -704,10 +661,10 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
 
               <div>
                 <h3 className="font-display font-extrabold text-sm text-white">
-                  Akses Rahasia Pengelola SINKI
+                  Akses Pengelola SINKI
                 </h3>
                 <p className="text-[10px] text-slate-400 mt-1">
-                  Masukkan PIN rahasia untuk mengaktifkan fitur hapus ulasan tidak pantas.
+                  Masukkan PIN untuk mengaktifkan fitur hapus ulasan.
                 </p>
               </div>
 
@@ -717,7 +674,7 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
                   type="password"
                   maxLength={8}
                   autoFocus
-                  placeholder="Masukkan PIN Rahasia"
+                  placeholder="Masukkan PIN"
                   value={pinInput}
                   onChange={(e) => {
                     setPinInput(e.target.value);
@@ -746,10 +703,6 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
                   </button>
                 </div>
               </form>
-
-              <p className="text-[8.5px] text-slate-500 font-mono">
-                (PIN Default: 1234)
-              </p>
             </div>
           </div>,
           document.body

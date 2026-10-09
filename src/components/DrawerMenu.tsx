@@ -21,11 +21,17 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
         <div>
           <div className="flex items-center justify-between pb-4 border-b border-white/15">
             <div>
-              <span className="font-display font-extrabold text-lg tracking-[0.2em] text-white block">
+              <span
+                data-text="SINKI"
+                className="font-display font-extrabold text-lg tracking-[0.2em] text-white block thin-light-sheen"
+              >
                 SINKI
               </span>
-              <span className="text-[9.5px] uppercase tracking-widest text-slate-300 font-semibold">
-                Eau De Parfum
+              <span
+                data-text="Eau de Parfum"
+                className="text-[10px] uppercase tracking-widest text-amber-200/90 font-semibold block mt-0.5 thin-light-sheen"
+              >
+                Eau de Parfum
               </span>
             </div>
             <button
