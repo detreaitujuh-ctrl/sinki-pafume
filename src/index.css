@@ -41,25 +41,25 @@
   background: radial-gradient(circle, rgba(251, 191, 36, 0.45) 0%, rgba(217, 119, 6, 0.22) 50%, transparent 75%);
 }
 
-/* Haute Horlogerie & High Perfumery: Rich Imperial Gold with Vivid Diamond Prismatic Beam */
+/* Haute Horlogerie & Parisian High Perfumery: Rich Solid Gold with Sharp French-Luxury Specular Light Beam */
 @keyframes hauteSpecularSweep {
   0% {
-    background-position: -220% center;
+    background-position: -200% center;
     opacity: 0;
   }
-  2% {
+  3% {
     opacity: 1;
   }
-  28% {
-    background-position: 180% center;
+  30% {
+    background-position: 200% center;
     opacity: 1;
   }
-  31% {
-    background-position: 180% center;
+  33% {
+    background-position: 200% center;
     opacity: 0;
   }
   100% {
-    background-position: 180% center;
+    background-position: 200% center;
     opacity: 0;
   }
 }
@@ -67,18 +67,9 @@
 .haute-gold-title {
   position: relative;
   display: inline-block;
-  /* Rich Imperial Gold with deep metallic bevel and warm radiance */
-  background: linear-gradient(
-    180deg,
-    #FDE49E 0%,
-    #F6D06D 24%,
-    #DC9F30 52%,
-    #A87313 78%,
-    #7B510A 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 18px rgba(220, 159, 48, 0.35));
+  /* Solid Parisian Imperial Gold: Deep, solid, prestigious and razor-sharp legible */
+  color: #F6C85F;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95), 0 0 20px rgba(245, 186, 73, 0.3);
 }
 
 .haute-gold-title::after {
@@ -96,40 +87,33 @@
   letter-spacing: inherit;
   text-align: inherit;
   pointer-events: none;
-  /* Option 1: Diamond Prismatic Beam (Clear, brilliant pure white core with luminous crystal glow) */
+  /* Crisp Paris Diamond Sheen: Brilliant pure white specular beam that sweeps across with crystal clarity */
   background: linear-gradient(
-    110deg,
+    115deg,
     transparent 0%,
-    transparent 30%,
-    rgba(255, 255, 255, 0.25) 38%,
-    rgba(255, 255, 255, 0.8) 45%,
+    transparent 28%,
+    rgba(255, 255, 255, 0.15) 36%,
+    rgba(255, 255, 255, 0.75) 44%,
     #FFFFFF 48%,
     #FFFFFF 52%,
-    rgba(255, 255, 255, 0.8) 55%,
-    rgba(255, 255, 255, 0.25) 62%,
-    transparent 70%,
+    rgba(255, 255, 255, 0.75) 56%,
+    rgba(255, 255, 255, 0.15) 64%,
+    transparent 72%,
     transparent 100%
   );
-  background-size: 240% 100%;
+  background-size: 250% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: hauteSpecularSweep 6.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1)) drop-shadow(0 0 22px rgba(254, 240, 199, 0.85));
+  animation: hauteSpecularSweep 4.8s cubic-bezier(0.25, 1, 0.3, 1) infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 1)) drop-shadow(0 0 16px rgba(255, 255, 255, 0.9));
 }
 
 .haute-gold-subtitle {
   position: relative;
   display: inline-block;
-  background: linear-gradient(
-    180deg,
-    #FDE8B3 0%,
-    #F7D47C 35%,
-    #C9942D 85%,
-    #936713 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.85));
+  /* Solid Parisian Champage Gold: Solid, clean, sharp, never muddy or faded */
+  color: #F8DA89;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
 }
 
 .haute-gold-subtitle::after {
@@ -147,24 +131,25 @@
   letter-spacing: inherit;
   text-align: inherit;
   pointer-events: none;
+  /* Paris Diamond Sheen synced with the main brand logo */
   background: linear-gradient(
-    110deg,
+    115deg,
     transparent 0%,
-    transparent 32%,
-    rgba(255, 255, 255, 0.3) 40%,
-    rgba(255, 255, 255, 0.85) 46%,
-    #FFFFFF 49%,
-    #FFFFFF 51%,
-    rgba(255, 255, 255, 0.85) 54%,
-    rgba(255, 255, 255, 0.3) 60%,
-    transparent 68%,
+    transparent 28%,
+    rgba(255, 255, 255, 0.2) 36%,
+    rgba(255, 255, 255, 0.8) 44%,
+    #FFFFFF 48%,
+    #FFFFFF 52%,
+    rgba(255, 255, 255, 0.8) 56%,
+    rgba(255, 255, 255, 0.2) 64%,
+    transparent 72%,
     transparent 100%
   );
-  background-size: 240% 100%;
+  background-size: 250% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: hauteSpecularSweep 6.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.95));
+  animation: hauteSpecularSweep 4.8s cubic-bezier(0.25, 1, 0.3, 1) infinite;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 1)) drop-shadow(0 0 12px rgba(255, 255, 255, 0.85));
 }
 
 .luxury-gold-subtle-focal {
