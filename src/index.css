@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #0e1017;
+    color: #f8fafc;
+  }
+}
+
+.font-display {
+  font-family: 'Cinzel', serif;
+}
+
+/* Hide scrollbars for smooth native app touch feel */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Golden luxury gradient text utility */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #FFF3B3 0%, #E8B960 50%, #A67528 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border {
+  border: 1px solid rgba(245, 186, 73, 0.35);
+}
+
+.gold-glow {
+  box-shadow: 0 0 30px -4px rgba(245, 186, 73, 0.3);
+}
+
+/* Golden Boutique Spotlight Halo for luxury glass showcases */
+.boutique-spotlight-glow {
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.45) 0%, rgba(217, 119, 6, 0.22) 50%, transparent 75%);
+}
+
+/* Reflective glassmorphism card rim */
+.glass-card-border {
+  border: 1px solid rgba(245, 186, 73, 0.32);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.65), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+}
