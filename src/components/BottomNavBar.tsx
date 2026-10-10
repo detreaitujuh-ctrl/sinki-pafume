@@ -47,7 +47,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
   return (
     <nav 
       aria-label="Navigasi Utama SINKI"
-      className="fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto px-3 pb-safe pt-2 bg-[#0e1017]/98 backdrop-blur-2xl border-t border-white/[0.08] shadow-[0_-10px_35px_rgba(0,0,0,0.85)]"
+      className="fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto px-3 pb-safe pt-2 bg-[#141724]/95 backdrop-blur-2xl border-t border-amber-500/20 shadow-[0_-6px_25px_rgba(0,0,0,0.65)]"
     >
       <div className="grid grid-cols-5 items-center gap-1 h-14">
         {navItems.map((item) => {
@@ -63,7 +63,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
               {/* Active Tab Glow Pill - Dibuat jauh lebih tipis & halus */}
               {isActive && (
                 <span 
-                  className="absolute inset-0 bg-gradient-to-b from-amber-500/[0.08] to-transparent rounded-xl border border-amber-400/20 shadow-[0_0_8px_rgba(245,186,73,0.12)] pointer-events-none"
+                  className="absolute inset-0 bg-amber-500/15 rounded-xl border border-amber-400/90 shadow-[0_2px_8px_rgba(245,186,73,0.12)] pointer-events-none"
                   aria-hidden="true"
                 />
               )}
@@ -74,7 +74,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
                   size={20}
                   className={`transition-colors duration-200 ${
                     isActive
-                      ? 'text-amber-300 filter drop-shadow-[0_0_4px_rgba(245,158,11,0.35)]'
+                      ? 'text-amber-300 '
                       : 'text-slate-200 group-hover:text-amber-200'
                   }`}
                   strokeWidth={isActive ? 2.3 : 1.9}
@@ -99,7 +99,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
               <span
                 className={`text-[10.5px] tracking-wide mt-1 transition-colors duration-200 whitespace-nowrap ${
                   isActive
-                    ? 'font-bold text-amber-200 drop-shadow-sm'
+                    ? 'font-bold text-amber-200'
                     : 'font-semibold text-slate-200 group-hover:text-white'
                 }`}
               >
