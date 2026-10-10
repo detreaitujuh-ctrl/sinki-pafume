@@ -108,14 +108,18 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
     });
   };
 
-  const handleOrderWhatsApp = (item: Top11Item) => {
-    const text = `Halo SINKI Parfums, saya ingin memesan parfum Top #${item.rank}: *${item.name}* (${item.type}). Mohon info harga & ketersediaannya ya. Terima kasih!`;
+  // Bottle Size Selection (10ml, 15ml, 20ml, 30ml, 50ml, 100ml) - Default 30ml
+  const [selectedBottleSize, setSelectedBottleSize] = useState<number>(30);
+
+  const handleOrderWhatsApp = (item: Top11Item, customSize?: number) => {
+    const sizeToUse = customSize || selectedBottleSize;
+    const text = `Halo SINKI Parfums, saya ingin memesan parfum Top #${item.rank}: *${item.name}* (${item.type}) ukuran *${sizeToUse}ml*. Mohon info harga & ketersediaannya ya. Terima kasih!`;
     const url = `https://wa.me/6289636824552?text=${encodeURIComponent(text)}`;
     const win = window.open(url, '_blank');
     if (!win) {
       window.location.href = url;
     }
-    onShowToast(`Menghubungkan ke WhatsApp resmi untuk Top #${item.rank} ${item.name}...`);
+    onShowToast(`Menghubungkan ke WhatsApp untuk Top #${item.rank} ${item.name} (${sizeToUse}ml)...`);
   };
 
   return (
@@ -351,14 +355,51 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
                 </div>
               </div>
 
+              {/* Bottle Size Selector (Pilihan Ukuran Botol) */}
+              <div className="mt-3 p-3 rounded-2xl bg-[#121422] border border-amber-500/25 space-y-2">
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="text-amber-300 font-extrabold flex items-center gap-1.5 tracking-wide">
+                    <span>Pilih Ukuran Botol:</span>
+                  </span>
+                  <span className="font-mono text-[10px] text-amber-200/90 font-bold px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30">
+                    Terpilih: {selectedBottleSize}ml
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-6 gap-1.5 pt-0.5">
+                  {[10, 15, 20, 30, 50, 100].map((size) => {
+                    const isSelected = selectedBottleSize === size;
+                    return (
+                      <button
+                        key={size}
+                        type="button"
+                        onClick={() => setSelectedBottleSize(size)}
+                        className={`relative py-1.5 rounded-xl text-center font-mono text-[11px] font-black transition-all active:scale-95 border ${
+                          isSelected
+                            ? 'bg-gradient-to-b from-[#FFE382] via-[#E5A93C] to-[#B3791A] text-slate-950 border-amber-300 shadow-md shadow-amber-500/30 scale-[1.03]'
+                            : 'bg-white/5 hover:bg-white/10 text-slate-300 border-white/10 hover:border-amber-400/40'
+                        }`}
+                      >
+                        {size}ml
+                        {size === 30 && (
+                          <span className={`block text-[7px] leading-tight font-sans tracking-tight ${isSelected ? 'text-slate-950 font-black' : 'text-amber-400'}`}>
+                            Favorit
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Order WhatsApp Button */}
-              <div className="pt-3">
+              <div className="pt-2">
                 <button
                   onClick={() => handleOrderWhatsApp(currentItem)}
                   className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 font-black text-xs flex items-center justify-center gap-2 hover:brightness-110 active:scale-98 transition-all shadow-lg shadow-amber-500/30 uppercase tracking-wide"
                 >
                   <MessageCircle size={15} />
-                  <span>Pesan Varian Top #{currentItem.rank} via WhatsApp</span>
+                  <span>Pesan Top #{currentItem.rank} ({selectedBottleSize}ml) via WhatsApp</span>
                 </button>
               </div>
             </div>
@@ -438,7 +479,7 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
                     className="w-full py-1.5 px-2 rounded-xl bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 border border-amber-500/40 text-amber-300 text-[9.5px] font-bold flex items-center justify-center gap-1 transition-all active:scale-95 shadow-sm"
                   >
                     <MessageCircle size={11} />
-                    <span>Pesan Varian</span>
+                    <span>Pesan ({selectedBottleSize}ml)</span>
                   </button>
                 </div>
               );
