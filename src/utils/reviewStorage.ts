@@ -132,6 +132,8 @@ export const fetchReviewsFromSupabase = async (): Promise<ReviewItem[]> => {
 /**
  * Menyimpan ulasan baru ke Supabase Storage (Otomatis tampil ke semua pengunjung)
  */
+export const MAX_REVIEWS_LIMIT = 6;
+
 export const saveReviewToSupabase = async (
   newReview: ReviewItem
 ): Promise<{ success: boolean; reviews: ReviewItem[] }> => {
@@ -139,8 +141,8 @@ export const saveReviewToSupabase = async (
     // 1. Ambil daftar ulasan terkini dari Supabase agar tidak menimpa ulasan orang lain
     const currentList = await fetchReviewsFromSupabase();
 
-    // 2. Masukkan ulasan baru di baris paling atas (#1)
-    const updatedList = [newReview, ...currentList.filter((r) => r.id !== newReview.id)];
+    // 2. Masukkan ulasan baru di baris paling atas (#1), batasi maksimal 6 ulasan terbaru (Opsi B: Rolling Limit)
+    const updatedList = [newReview, ...currentList.filter((r) => r.id !== newReview.id)].slice(0, MAX_REVIEWS_LIMIT);
 
     // 3. Upload ke Supabase Storage
     const { error } = await supabase.storage
@@ -162,7 +164,7 @@ export const saveReviewToSupabase = async (
   } catch (err) {
     console.error('Exception saving review to Supabase:', err);
     const cached = getCachedReviews();
-    const updated = [newReview, ...cached];
+    const updated = [newReview, ...cached].slice(0, MAX_REVIEWS_LIMIT);
     setCachedReviews(updated);
     return { success: false, reviews: updated };
   }

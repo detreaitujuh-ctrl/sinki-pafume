@@ -23,6 +23,7 @@ import {
   deleteReviewFromSupabase,
   likeReviewInSupabase,
   resetReviewsToDefaultInSupabase,
+  MAX_REVIEWS_LIMIT,
 } from '../utils/reviewStorage';
 
 export type { ReviewItem };
@@ -373,7 +374,7 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({
 
         {/* TEPAT 4 BARIS KOTAK ULASAN DENGAN GLASSMORPHISM BORDER & TEKS TERANG */}
         <div className="space-y-2.5">
-          {reviews.map((rev) => {
+          {reviews.slice(0, MAX_REVIEWS_LIMIT).map((rev) => {
             const hasLiked = likedReviews.includes(rev.id);
 
             return (
