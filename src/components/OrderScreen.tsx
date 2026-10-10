@@ -115,7 +115,7 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
   return (
     <div className="relative w-full h-full flex flex-col bg-gradient-to-b from-[#181b26] via-[#141620] to-[#10121a] text-slate-100 overflow-hidden">
       {/* Pendar Cahaya Emas Halus & Tipis */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/[0.07] rounded-full blur-[110px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/[0.03] rounded-full blur-[140px] pointer-events-none" />
 
       {/* Top Header */}
       <div className="relative z-10 px-4 pt-3 pb-2.5 shrink-0 bg-[#12141a]/95 border-b border-amber-500/20 backdrop-blur-md flex items-center justify-between shadow-sm">
@@ -149,7 +149,7 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
       {/* Main Scrollable Content */}
       <div className="flex-1 overflow-y-auto no-scrollbar p-3.5 pb-24 space-y-3.5">
         {/* PROMINENT BADGE: GRATIS ONGKIR SE-JABODETABEK MIN ORDER 150 RIBU */}
-        <div className="p-3 rounded-2xl bg-gradient-to-r from-amber-500/25 via-amber-600/20 to-amber-500/10 border border-amber-400/50 flex items-center justify-between shadow-[0_6px_22px_rgba(0,0,0,0.5)]">
+        <div className="p-3 rounded-2xl bg-[#141626] border border-amber-500/30 flex items-center justify-between shadow-md">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center shadow-md shrink-0">
               <Truck size={17} />
@@ -268,9 +268,9 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
         )}
 
         {/* STEP 1: PILIH KATEGORI PARFUM */}
-        <div className="p-4 rounded-3xl bg-gradient-to-b from-[#1e2235]/95 via-[#181a2b]/95 to-[#131524]/95 border border-amber-500/40 space-y-3 shadow-[0_10px_30px_rgba(0,0,0,0.6)] backdrop-blur-md">
+        <div className="p-4 rounded-3xl bg-[#141724]/95 border border-amber-500/25 space-y-3 shadow-lg backdrop-blur-md">
           <div className="flex items-center justify-between">
-            <span className="text-[10.5px] font-black uppercase tracking-widest text-amber-300 flex items-center gap-1.5 drop-shadow-sm">
+            <span className="text-[10.5px] font-black uppercase tracking-widest text-amber-300 flex items-center gap-1.5">
               <Layers size={13} /> 1. Kategori Parfum & Ketahanan
             </span>
             <span className="text-[9.5px] text-amber-200/80 font-medium flex items-center gap-1">
@@ -284,7 +284,7 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
               onClick={() => setTier('non_premium')}
               className={`p-2.5 rounded-2xl border text-left transition-all relative overflow-hidden ${
                 tier === 'non_premium'
-                  ? 'bg-amber-500/30 border-amber-400 shadow-[0_0_18px_rgba(245,186,73,0.35)]'
+                  ? 'bg-amber-500/15 border-amber-400/90 shadow-[0_2px_8px_rgba(245,186,73,0.12)]'
                   : 'bg-white/5 border-white/15 hover:border-white/30'
               }`}
             >
@@ -310,7 +310,7 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
               onClick={() => setTier('premium')}
               className={`p-2.5 rounded-2xl border text-left transition-all relative overflow-hidden ${
                 tier === 'premium'
-                  ? 'bg-amber-500/30 border-amber-400 shadow-[0_0_18px_rgba(245,186,73,0.35)]'
+                  ? 'bg-amber-500/15 border-amber-400/90 shadow-[0_2px_8px_rgba(245,186,73,0.12)]'
                   : 'bg-white/5 border-white/15 hover:border-white/30'
               }`}
             >
@@ -336,7 +336,7 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
               onClick={() => setTier('mykonos')}
               className={`p-2.5 rounded-2xl border text-left transition-all relative overflow-hidden ${
                 tier === 'mykonos'
-                  ? 'bg-amber-500/30 border-amber-400 shadow-[0_0_18px_rgba(245,186,73,0.35)]'
+                  ? 'bg-amber-500/15 border-amber-400/90 shadow-[0_2px_8px_rgba(245,186,73,0.12)]'
                   : 'bg-white/5 border-white/15 hover:border-white/30'
               }`}
             >
@@ -408,7 +408,7 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
 
           {/* STEP 2: PILIH UKURAN BOTOL */}
           <div className="pt-2">
-            <span className="text-[10.5px] font-black uppercase tracking-widest text-amber-300 block mb-2 drop-shadow-sm">
+            <span className="text-[10.5px] font-black uppercase tracking-widest text-amber-300 block mb-2">
               2. Pilih Ukuran Botol
             </span>
 
@@ -423,7 +423,7 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
                     onClick={() => setSelectedSize(size)}
                     className={`p-2 rounded-2xl border text-center transition-all ${
                       isSelected
-                        ? 'bg-gradient-to-b from-amber-500/35 to-amber-600/20 border-amber-400 shadow-[0_0_15px_rgba(245,186,73,0.4)]'
+                        ? 'bg-amber-500/15 border-amber-400/90 shadow-[0_2px_8px_rgba(245,186,73,0.12)]'
                         : 'bg-white/5 border-white/15 hover:border-white/30'
                     }`}
                   >
@@ -441,7 +441,7 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
 
           {/* STEP 3: PILIH VARIAN AROMA & JUMLAH */}
           <div className="pt-2 space-y-2">
-            <span className="text-[10.5px] font-black uppercase tracking-widest text-amber-300 block drop-shadow-sm">
+            <span className="text-[10.5px] font-black uppercase tracking-widest text-amber-300 block">
               3. Varian Aroma
             </span>
 
@@ -499,9 +499,9 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
         </div>
 
         {/* STEP 4: PEMBAYARAN QRIS RESMI (SEMBUNYIKAN BY DEFAULT, BUKA KETIKA MAU BAYAR) */}
-        <div className="p-4 rounded-3xl bg-gradient-to-b from-[#1e2235]/95 to-[#141624]/95 border border-amber-500/35 space-y-3 shadow-[0_8px_25px_rgba(0,0,0,0.55)] backdrop-blur-md">
+        <div className="p-4 rounded-3xl bg-[#141724]/95 border border-amber-500/20 space-y-3 shadow-md backdrop-blur-md">
           <div className="flex items-center justify-between">
-            <span className="text-[10.5px] font-black uppercase tracking-widest text-amber-300 flex items-center gap-1.5 drop-shadow-sm">
+            <span className="text-[10.5px] font-black uppercase tracking-widest text-amber-300 flex items-center gap-1.5">
               <QrCode size={13} /> 4. Pembayaran QRIS SINKI
             </span>
             <span className="text-[9.5px] font-mono text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">
@@ -567,7 +567,7 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
         </div>
 
         {/* STEP 5: TOTAL RINCIAN & TOMBOL WHATSAPP RESMI */}
-        <div className="p-4 rounded-3xl bg-gradient-to-b from-[#1e2235]/95 to-[#141624]/95 border border-amber-400/45 space-y-3 shadow-[0_12px_35px_rgba(0,0,0,0.65)] backdrop-blur-md">
+        <div className="p-4 rounded-3xl bg-[#141724]/95 border border-amber-500/30 space-y-3 shadow-lg backdrop-blur-md">
           {/* Summary */}
           <div className="space-y-1.5 text-xs text-white">
             <div className="flex justify-between font-semibold">
