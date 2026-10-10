@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Crown, MessageCircle, ChevronLeft, ChevronRight, LayoutGrid, Clock, Flame, ArrowLeft, Heart, Maximize2, Minimize2 } from 'lucide-react';
+import { Crown, MessageCircle, ChevronLeft, ChevronRight, LayoutGrid, Clock, Flame, ArrowLeft, Heart, Maximize2, Minimize2, Sparkles, Tag } from 'lucide-react';
 import { TOP_11_DATA, Top11Item } from '../data/top11';
 import { PerfumeBottleVisual, loadedPhotoSet } from './PerfumeBottleVisual';
+import { PricingConfig, DEFAULT_PRICING, getStoredPricing } from '../utils/pricingStorage';
 
 interface Top11ScreenProps {
   top11Photos: Record<string, string>;
   onBackToHome: () => void;
   onShowToast: (msg: string) => void;
   isActive?: boolean;
+  pricing?: PricingConfig;
 }
 
 export const Top11Screen: React.FC<Top11ScreenProps> = ({
@@ -15,6 +17,7 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
   onBackToHome,
   onShowToast,
   isActive = false,
+  pricing,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [viewMode, setViewMode] = useState<'spotlight' | 'grid'>('spotlight');
@@ -111,15 +114,47 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
   // Bottle Size Selection (10ml, 15ml, 20ml, 30ml, 50ml, 100ml) - Default 30ml
   const [selectedBottleSize, setSelectedBottleSize] = useState<number>(30);
 
+  // Active pricing config for Top 11 (Option B: Mykonos series vs Premium quality)
+  const activePricing = pricing || getStoredPricing();
+  const currentPremiumRate = activePricing.premiumRatePerMl || DEFAULT_PRICING.premiumRatePerMl;
+  const currentMykonosRate = activePricing.mykonosRatePerMl || DEFAULT_PRICING.mykonosRatePerMl;
+
+  // Option B: Mykonos items (Top #1, #2) use Mykonos rate (Rp 3.000/ml), all other items (Top #3 - #11) use Premium rate (Rp 4.000/ml)
+  const getItemPricingInfo = (item: Top11Item, size: number) => {
+    const isMykonos = item.id === 'top-1' || item.id === 'top-2' || item.name.toLowerCase().includes('mykonos');
+    const ratePerMl = isMykonos ? currentMykonosRate : currentPremiumRate;
+    const categoryName = isMykonos ? 'Mykonos Series' : 'Premium Quality';
+    const totalPrice = size * ratePerMl;
+    return {
+      isMykonos,
+      ratePerMl,
+      categoryName,
+      totalPrice,
+    };
+  };
+
   const handleOrderWhatsApp = (item: Top11Item, customSize?: number) => {
     const sizeToUse = customSize || selectedBottleSize;
-    const text = `Halo SINKI Parfums, saya ingin memesan parfum Top #${item.rank}: *${item.name}* (${item.type}) ukuran *${sizeToUse}ml*. Mohon info harga & ketersediaannya ya. Terima kasih!`;
-    const url = `https://wa.me/6289636824552?text=${encodeURIComponent(text)}`;
+    const info = getItemPricingInfo(item, sizeToUse);
+
+    const message = [
+      `*PESANAN PARFUM SINKI - TOP 11*`,
+      `------------------------------------------`,
+      `• Varian: *Top #${item.rank} - ${item.name}*`,
+      `• Tipe: *${item.type}*`,
+      `• Kategori: *${info.categoryName} (Rp ${info.ratePerMl.toLocaleString('id-ID')}/ml)*`,
+      `• Ukuran Botol: *${sizeToUse}ml*`,
+      `• Total Harga: *Rp ${info.totalPrice.toLocaleString('id-ID')}*`,
+      `------------------------------------------`,
+      `Halo SINKI Parfums, saya ingin memesan parfum Top #${item.rank} di atas. Mohon info ketersediaan & cara pengirimannya ya. Terima kasih!`,
+    ].join('\n');
+
+    const url = `https://wa.me/6289636824552?text=${encodeURIComponent(message)}`;
     const win = window.open(url, '_blank');
     if (!win) {
       window.location.href = url;
     }
-    onShowToast(`Menghubungkan ke WhatsApp untuk Top #${item.rank} ${item.name} (${sizeToUse}ml)...`);
+    onShowToast(`Menghubungkan ke WhatsApp: Top #${item.rank} ${item.name} (${sizeToUse}ml - Rp ${info.totalPrice.toLocaleString('id-ID')})...`);
   };
 
   return (
@@ -355,17 +390,23 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
                 </div>
               </div>
 
-              {/* Bottle Size Selector (Pilihan Ukuran Botol) */}
-              <div className="mt-3 p-3 rounded-2xl bg-[#121422] border border-amber-500/25 space-y-2">
+              {/* Bottle Size Selector & Option B Pricing (Pilihan Ukuran Botol & Harga) */}
+              <div className="mt-3 p-3 rounded-2xl bg-[#121422] border border-amber-500/25 space-y-2.5">
                 <div className="flex items-center justify-between text-[11px]">
                   <span className="text-amber-300 font-extrabold flex items-center gap-1.5 tracking-wide">
                     <span>Pilih Ukuran Botol:</span>
                   </span>
-                  <span className="font-mono text-[10px] text-amber-200/90 font-bold px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30">
-                    Terpilih: {selectedBottleSize}ml
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-[9px] font-bold px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/35 uppercase tracking-wider">
+                      {getItemPricingInfo(currentItem, selectedBottleSize).categoryName}
+                    </span>
+                    <span className="font-mono text-[10px] text-amber-200/90 font-bold px-2 py-0.5 rounded-full bg-white/5 border border-white/10">
+                      {selectedBottleSize}ml
+                    </span>
+                  </div>
                 </div>
 
+                {/* 6 Pilihan Ukuran Botol */}
                 <div className="grid grid-cols-6 gap-1.5 pt-0.5">
                   {[10, 15, 20, 30, 50, 100].map((size) => {
                     const isSelected = selectedBottleSize === size;
@@ -382,7 +423,11 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
                       >
                         {size}ml
                         {size === 30 && (
-                          <span className={`block text-[7px] leading-tight font-sans tracking-tight ${isSelected ? 'text-slate-950 font-black' : 'text-amber-400'}`}>
+                          <span
+                            className={`block text-[7px] leading-tight font-sans tracking-tight ${
+                              isSelected ? 'text-slate-950 font-black' : 'text-amber-400'
+                            }`}
+                          >
                             Favorit
                           </span>
                         )}
@@ -390,18 +435,48 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
                     );
                   })}
                 </div>
+
+                {/* Real-time Pricing Summary Banner */}
+                {(() => {
+                  const pricingInfo = getItemPricingInfo(currentItem, selectedBottleSize);
+                  return (
+                    <div className="flex items-center justify-between pt-2 border-t border-amber-500/15">
+                      <div className="text-[11px] text-slate-300">
+                        <span className="text-slate-400 text-[10px] block leading-tight">Tarif Resmi:</span>
+                        <span className="font-mono text-[11px] text-amber-300 font-semibold">
+                          Rp {pricingInfo.ratePerMl.toLocaleString('id-ID')}/ml
+                        </span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] text-slate-400 block leading-tight">
+                          Total Harga ({selectedBottleSize}ml):
+                        </span>
+                        <span className="text-base font-extrabold text-amber-300 font-mono tracking-tight drop-shadow-sm">
+                          Rp {pricingInfo.totalPrice.toLocaleString('id-ID')}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Order WhatsApp Button */}
-              <div className="pt-2">
-                <button
-                  onClick={() => handleOrderWhatsApp(currentItem)}
-                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 font-black text-xs flex items-center justify-center gap-2 hover:brightness-110 active:scale-98 transition-all shadow-lg shadow-amber-500/30 uppercase tracking-wide"
-                >
-                  <MessageCircle size={15} />
-                  <span>Pesan Top #{currentItem.rank} ({selectedBottleSize}ml) via WhatsApp</span>
-                </button>
-              </div>
+              {(() => {
+                const pricingInfo = getItemPricingInfo(currentItem, selectedBottleSize);
+                return (
+                  <div className="pt-2">
+                    <button
+                      onClick={() => handleOrderWhatsApp(currentItem)}
+                      className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 font-black text-xs flex items-center justify-center gap-2 hover:brightness-110 active:scale-98 transition-all shadow-lg shadow-amber-500/30 uppercase tracking-wide"
+                    >
+                      <MessageCircle size={15} />
+                      <span>
+                        Pesan Top #{currentItem.rank} ({selectedBottleSize}ml • Rp {pricingInfo.totalPrice.toLocaleString('id-ID')})
+                      </span>
+                    </button>
+                  </div>
+                );
+              })()}
             </div>
         </div>
 
@@ -459,28 +534,54 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
 
                   {/* Info */}
                   <div className="space-y-1 mb-2">
-                    <span className="text-[8.5px] font-mono text-amber-300 font-bold uppercase tracking-widest block">
-                      {item.type}
-                    </span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[8.5px] font-mono text-amber-300 font-bold uppercase tracking-widest block">
+                        {item.type}
+                      </span>
+                      {(() => {
+                        const gridPricing = getItemPricingInfo(item, selectedBottleSize);
+                        return (
+                          <span className="text-[7.5px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                            {gridPricing.isMykonos ? 'Mykonos' : 'Premium'}
+                          </span>
+                        );
+                      })()}
+                    </div>
                     <h4 className="font-display text-xs font-black text-white leading-tight line-clamp-1">
                       {item.name}
                     </h4>
                     <p className="text-[8.5px] text-amber-200/90 font-medium italic line-clamp-2 leading-tight">
                       {item.subtitle}
                     </p>
+                    {(() => {
+                      const gridPricing = getItemPricingInfo(item, selectedBottleSize);
+                      return (
+                        <div className="pt-1 flex items-center justify-between border-t border-white/5 text-[9px]">
+                          <span className="text-slate-400 font-mono text-[8.5px]">{selectedBottleSize}ml:</span>
+                          <span className="font-mono font-bold text-amber-300 text-[10.5px]">
+                            Rp {gridPricing.totalPrice.toLocaleString('id-ID')}
+                          </span>
+                        </div>
+                      );
+                    })()}
                   </div>
 
                   {/* Order Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOrderWhatsApp(item);
-                    }}
-                    className="w-full py-1.5 px-2 rounded-xl bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 border border-amber-500/40 text-amber-300 text-[9.5px] font-bold flex items-center justify-center gap-1 transition-all active:scale-95 shadow-sm"
-                  >
-                    <MessageCircle size={11} />
-                    <span>Pesan ({selectedBottleSize}ml)</span>
-                  </button>
+                  {(() => {
+                    const gridPricing = getItemPricingInfo(item, selectedBottleSize);
+                    return (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOrderWhatsApp(item);
+                        }}
+                        className="w-full py-1.5 px-2 rounded-xl bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 border border-amber-500/40 text-amber-300 text-[9px] font-bold flex items-center justify-center gap-1 transition-all active:scale-95 shadow-sm"
+                      >
+                        <MessageCircle size={11} />
+                        <span>Pesan {selectedBottleSize}ml (Rp {gridPricing.totalPrice.toLocaleString('id-ID')})</span>
+                      </button>
+                    );
+                  })()}
                 </div>
               );
             })}

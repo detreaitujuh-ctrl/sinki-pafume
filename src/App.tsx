@@ -188,6 +188,7 @@ export default function App() {
                 top11Photos={top11Photos}
                 onBackToHome={() => setActiveTab('home')}
                 onShowToast={showToast}
+                pricing={pricing}
               />
             </div>
 
