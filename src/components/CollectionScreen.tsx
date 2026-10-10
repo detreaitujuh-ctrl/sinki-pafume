@@ -37,17 +37,15 @@ export const CollectionScreen: React.FC<CollectionScreenProps> = ({
   });
 
   const toggleFavorite = (id: string, name: string) => {
-    setFavorites((prev) => {
-      const exists = prev.includes(id);
-      const updated = exists ? prev.filter((item) => item !== id) : [...prev, id];
-      try {
-        localStorage.setItem('sinki_favorites', JSON.stringify(updated));
-      } catch (e) {
-        console.error(e);
-      }
-      onShowToast(exists ? `${name} dihapus dari favorit` : `${name} ditambahkan ke favorit ❤️`);
-      return updated;
-    });
+    const exists = favorites.includes(id);
+    const updated = exists ? favorites.filter((item) => item !== id) : [...favorites, id];
+    try {
+      localStorage.setItem("sinki_favorites", JSON.stringify(updated));
+    } catch (e) {
+      console.error(e);
+    }
+    setFavorites(updated);
+    onShowToast(exists ? `${name} dihapus dari favorit` : `${name} ditambahkan ke favorit ❤️`);
   };
 
   const filteredPerfumes = useMemo(() => {

@@ -127,9 +127,13 @@ export default function App() {
     touchEndY.current = null;
   };
 
+  const toastTimerRef = useRef<NodeJS.Timeout | null>(null);
   const showToast = (message: string) => {
+    if (toastTimerRef.current) {
+      clearTimeout(toastTimerRef.current);
+    }
     setToastMessage(message);
-    setTimeout(() => {
+    toastTimerRef.current = setTimeout(() => {
       setToastMessage(null);
     }, 3000);
   };

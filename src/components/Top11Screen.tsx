@@ -31,20 +31,18 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
   });
 
   const toggleFitMode = () => {
-    setFitMode((prev) => {
-      const next = prev === 'cover' ? 'contain' : 'cover';
-      try {
-        localStorage.setItem('sinki_bottle_fit_mode', next);
-      } catch (e) {
-        console.error(e);
-      }
-      onShowToast(
-        next === 'cover'
-          ? 'Mode Foto: Penuh (Mengisi seluruh kotak bingkai) 🖼️'
-          : 'Mode Foto: Pas di Tengah (Ukuran proporsional) 🔍'
-      );
-      return next;
-    });
+    const next = fitMode === 'cover' ? 'contain' : 'cover';
+    try {
+      localStorage.setItem('sinki_bottle_fit_mode', next);
+    } catch (e) {
+      console.error(e);
+    }
+    setFitMode(next);
+    onShowToast(
+      next === 'cover'
+        ? 'Mode Foto: Penuh (Mengisi seluruh kotak bingkai) 🖼️'
+        : 'Mode Foto: Pas di Tengah (Ukuran proporsional) 🔍'
+    );
   };
 
   // Setiap kali masuk ke halaman Top 11, otomatis kembali segar ke Juara #1
@@ -98,17 +96,15 @@ export const Top11Screen: React.FC<Top11ScreenProps> = ({
   };
 
   const toggleFavorite = (id: string, name: string) => {
-    setFavorites((prev) => {
-      const exists = prev.includes(id);
-      const updated = exists ? prev.filter((item) => item !== id) : [...prev, id];
-      try {
-        localStorage.setItem('sinki_top11_favorites', JSON.stringify(updated));
-      } catch (e) {
-        console.error(e);
-      }
-      onShowToast(exists ? `${name} dihapus dari favorit` : `${name} ditambahkan ke favorit ❤️`);
-      return updated;
-    });
+    const exists = favorites.includes(id);
+    const updated = exists ? favorites.filter((item) => item !== id) : [...favorites, id];
+    try {
+      localStorage.setItem('sinki_top11_favorites', JSON.stringify(updated));
+    } catch (e) {
+      console.error(e);
+    }
+    setFavorites(updated);
+    onShowToast(exists ? `${name} dihapus dari favorit` : `${name} ditambahkan ke favorit ❤️`);
   };
 
   // Bottle Size Selection (10ml, 15ml, 20ml, 30ml, 50ml, 100ml) - Default 30ml
