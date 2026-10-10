@@ -312,18 +312,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         >
           {/* Running Text Area with Mask Fade */}
           <div className="flex-1 overflow-hidden relative ticker-mask-fade py-0.5 min-w-0">
-            <div className="luxury-ticker-track font-normal text-[9.5px] tracking-wide text-slate-300">
-              <span className="inline-block pr-6 text-slate-200">
-                ✦ Tahan 8 jam, dia aja yang gak tahan 😏
+            <div className="luxury-ticker-track font-display text-[9.5px] tracking-[0.16em] text-slate-300">
+              <span className="inline-block pr-6 text-slate-200 font-medium">
+                <span className="text-amber-400 font-bold mr-1">✦</span> Tahan 8 jam, dia aja yang gak tahan 😏
               </span>
-              <span className="inline-block pr-6 text-amber-300/90 font-medium">
-                ✦ Tahan 8 jam, dia aja yang gak tahan 😏
+              <span className="inline-block pr-6 text-amber-200 font-semibold">
+                <span className="text-amber-400 font-bold mr-1">✦</span> Tahan 8 jam, dia aja yang gak tahan 😏
               </span>
-              <span className="inline-block pr-6 text-slate-200">
-                ✦ Tahan 8 jam, dia aja yang gak tahan 😏
+              <span className="inline-block pr-6 text-slate-200 font-medium">
+                <span className="text-amber-400 font-bold mr-1">✦</span> Tahan 8 jam, dia aja yang gak tahan 😏
               </span>
-              <span className="inline-block pr-6 text-amber-300/90 font-medium">
-                ✦ Tahan 8 jam, dia aja yang gak tahan 😏
+              <span className="inline-block pr-6 text-amber-200 font-semibold">
+                <span className="text-amber-400 font-bold mr-1">✦</span> Tahan 8 jam, dia aja yang gak tahan 😏
               </span>
             </div>
           </div>
