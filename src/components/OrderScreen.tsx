@@ -29,6 +29,7 @@ interface OrderScreenProps {
   onShowToast: (msg: string) => void;
   pricing?: PricingConfig;
   customQris?: string | null;
+  selectedPerfumeFromCollection?: { name: string; category?: string } | null;
 }
 
 // TIER DEFINITIONS
@@ -45,12 +46,33 @@ export const OrderScreen: React.FC<OrderScreenProps> = ({
   onShowToast,
   pricing,
   customQris,
+  selectedPerfumeFromCollection,
 }) => {
   // Order Selection State
   const [tier, setTier] = useState<PerfumeTier>('non_premium');
   const [selectedSize, setSelectedSize] = useState<BottleSize>(30);
   const [selectedVariant, setSelectedVariant] = useState(TOP_11_DATA[0].name);
   const [customVariantName, setCustomVariantName] = useState('');
+
+  // Sync when a perfume is chosen directly from Collection screen
+  useEffect(() => {
+    if (selectedPerfumeFromCollection) {
+      const perfName = selectedPerfumeFromCollection.name;
+      // Check if variant is in TOP_11_DATA
+      const isTop11 = TOP_11_DATA.some((item) => item.name.toLowerCase() === perfName.toLowerCase());
+      if (isTop11) {
+        setSelectedVariant(perfName);
+        setCustomVariantName('');
+      } else {
+        setCustomVariantName(perfName);
+      }
+
+      // If category is mykonos, automatically set tier to mykonos
+      if (selectedPerfumeFromCollection.category === 'mykonos' || perfName.toLowerCase().includes('mykonos')) {
+        setTier('mykonos');
+      }
+    }
+  }, [selectedPerfumeFromCollection]);
   const [quantity, setQuantity] = useState(1);
 
   // Price List Visibility Toggle (Inline so it never turns black or gets blocked by transforms)

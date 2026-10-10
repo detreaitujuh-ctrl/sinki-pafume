@@ -1,16 +1,18 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Search, Heart, Sparkles, MessageCircle, X, ArrowLeft, Filter } from 'lucide-react';
+import { Search, Heart, Sparkles, ShoppingBag, X, ArrowLeft, Filter } from 'lucide-react';
 import { PERFUMES_DATA, PerfumeCategory, PerfumeItem } from '../data/perfumes';
 
 interface CollectionScreenProps {
   onBackToHome: () => void;
   onShowToast: (msg: string) => void;
+  onSelectPerfumeToOrder?: (item: PerfumeItem) => void;
   scrollToTopTrigger?: number;
 }
 
 export const CollectionScreen: React.FC<CollectionScreenProps> = ({
   onBackToHome,
   onShowToast,
+  onSelectPerfumeToOrder,
   scrollToTopTrigger,
 }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -286,19 +288,19 @@ export const CollectionScreen: React.FC<CollectionScreenProps> = ({
                     </div>
                   </div>
 
-                  {/* Bottom Action: WhatsApp Order Button (Nomor Resmi 0896-3682-4552) */}
-                  <a
-                    href={getWhatsAppUrl(perfume)}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  {/* Bottom Action: Direct to Order Screen */}
+                  <button
                     onClick={() => {
-                      onShowToast(`Menghubungkan ke WhatsApp resmi untuk ${perfume.name}...`);
+                      if (onSelectPerfumeToOrder) {
+                        onSelectPerfumeToOrder(perfume);
+                      }
                     }}
-                    className="w-full mt-auto py-1.5 px-2 rounded-xl bg-gradient-to-r from-amber-500/25 via-amber-500/35 to-amber-600/25 hover:from-amber-500 hover:to-amber-600 hover:text-slate-950 border border-amber-500/45 text-amber-300 text-[10px] font-black flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-sm text-center"
+                    className="w-full mt-auto py-1.5 px-2 rounded-xl bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 border border-amber-500/45 text-amber-300 text-[10px] font-black flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-sm text-center"
+                    title={`Pesan parfum ${perfume.name}`}
                   >
-                    <MessageCircle size={11} className="shrink-0" />
-                    <span>Pesan Varian</span>
-                  </a>
+                    <ShoppingBag size={11} className="shrink-0" />
+                    <span>Pesan Sekarang</span>
+                  </button>
                 </div>
               );
             })}

@@ -24,6 +24,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [collectionScrollTrigger, setCollectionScrollTrigger] = useState(0);
+  const [selectedPerfumeForOrder, setSelectedPerfumeForOrder] = useState<{ name: string; category?: string } | null>(null);
 
   // Custom User Assets & Pricing Configuration
   const [customLogo, setCustomLogo] = useState<string | null>(getStoredLogo());
@@ -182,6 +183,11 @@ export default function App() {
                 onBackToHome={() => setActiveTab('home')}
                 onShowToast={showToast}
                 scrollToTopTrigger={collectionScrollTrigger}
+                onSelectPerfumeToOrder={(perfume) => {
+                  setSelectedPerfumeForOrder({ name: perfume.name, category: perfume.category });
+                  setActiveTab('order');
+                  showToast(`Varian "${perfume.name}" dipilih! Silakan tentukan ukuran botol ✨`);
+                }}
               />
             </div>
 
@@ -203,6 +209,7 @@ export default function App() {
                 onShowToast={showToast}
                 pricing={pricing}
                 customQris={customQris}
+                selectedPerfumeFromCollection={selectedPerfumeForOrder}
               />
             </div>
 
